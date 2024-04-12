@@ -17,7 +17,7 @@ if (!self.__WB_pmw) {
   let frames = _____WB$wombat$assign$function_____("frames")
   let opener = _____WB$wombat$assign$function_____("opener")
 
-  // 繧ｰ繝ｭ繝ｼ繝舌Ν螟画焚
+  // グローバル変数
   var leftMargin = 20
   var rightMargin = leftMargin
   var bottomMargin = 10
@@ -31,7 +31,7 @@ if (!self.__WB_pmw) {
   var data = null
   var md5 = ""
 
-  // - 繝ｬ繝ｳ繝繝ｪ繝ｳ繧ｰ繝代Λ繝｡繝ｼ繧ｿ
+  // - レンダリングパラメータ
   var urlParam = {}
   var scaleW = 7
   var minScaleW = 4
@@ -45,7 +45,7 @@ if (!self.__WB_pmw) {
   var measureTo = 0
   var colorScheme = "default"
 
-  // 螳壽焚
+  // 定数
   var measureGridSize = {
     5: 19,
     7: 23,
@@ -144,18 +144,18 @@ if (!self.__WB_pmw) {
     },
   }
 
-  // 蟆冗ｯ繧ｪ繝悶ず繧ｧ繧ｯ繝�
+  // 小節オブジェク�?
   function Measure(param) {
     var lineWidth = 1
     var container = new PIXI.Container()
     var g = new PIXI.Graphics()
     container.addChild(g)
 
-    // 繧ｳ繝ｳ繝�リ繧ｵ繧､繧ｺ繧呈ｱｺ螳�
+    // コン�?��サイズを決�?
     container.innerHeight = g.innerHeight = param.length * param.scaleH * param.exratio
     container.innerWidth = g.innerWidth = measureGridSize[param.keys] * param.scaleW
 
-    // 繝代Λ繝｡繝ｼ繧ｿ繧偵そ繝�ヨ
+    // パラメータをセ�?��
     g.logicalLength = param.length
     g.unitLength = param.unit
     g.index = param.index
@@ -167,7 +167,7 @@ if (!self.__WB_pmw) {
     g.side = param.side
     g.pattern = param.pattern
 
-    // 螟匁棧謠冗判繝｡繧ｽ繝�ラ
+    // 外枠描画メソ�?��
     g.drawOuterBound = function () {
       g.lineStyle(lineWidth, schemes[colorScheme].outerBound, 1)
       g.moveTo(-lineWidth, 0)
@@ -177,21 +177,21 @@ if (!self.__WB_pmw) {
       g.lineTo(-lineWidth, 0)
     }
 
-    // 蟆冗ｯ邱壽緒逕ｻ繝｡繧ｽ繝�ラ
+    // 小節線描画メソ�?��
     g.drawMeasureLines = function () {
       var grid = g.innerHeight / g.logicalLength
       for (var i = 1; (i * g.unitLength) / 16 < g.logicalLength; i++) {
-        var color = schemes[colorScheme].sixteenthLine //  16蛻�浹隨ｦ
+        var color = schemes[colorScheme].sixteenthLine //  16�?��符
         if (i % 4 == 0) {
           color = schemes[colorScheme].quarterLine
-        } // 4蛻�浹隨ｦ
+        } // 4�?��符
         g.lineStyle(lineWidth, color, 1)
         g.moveTo(-1, g.innerHeight - (grid * i * g.unitLength) / 16 - lineWidth)
         g.lineTo(g.innerWidth, g.innerHeight - (grid * i * g.unitLength) / 16 - lineWidth)
       }
     }
 
-    // 繝弱�繝亥｢�阜邱壽緒逕ｻ繝｡繧ｽ繝�ラ
+    // ノ�?ト�?��線描画メソ�?��
     g.drawNoteLines = function () {
       switch (g.keys) {
         case 5:
@@ -210,9 +210,9 @@ if (!self.__WB_pmw) {
       }
     }
 
-    // 繝弱�繝亥｢�阜邱咼P
+    // ノ�?ト�?��線DP
     g.drawNoteLinesDP = function (keys) {
-      // 繝弱�繝亥｢�阜邱壹ｒ謠冗判
+      // ノ�?ト�?��線を描画
       // SC:5, KEY:2, LABEL:2
       var grid = g.gridX
       var color = schemes[colorScheme].laneLine
@@ -262,9 +262,9 @@ if (!self.__WB_pmw) {
         g.lineTo(grid * idx, g.innerHeight - lineWidth)
       }
     }
-    // 繝弱�繝亥｢�阜邱售P
+    // ノ�?ト�?��線SP
     g.drawNoteLinesSP = function (keys) {
-      // 繝弱�繝亥｢�阜邱壹ｒ謠冗判
+      // ノ�?ト�?��線を描画
       // SC:5, KEY:2, LABEL:2
       var grid = g.gridX
       var color = schemes[colorScheme].laneLine
@@ -304,7 +304,7 @@ if (!self.__WB_pmw) {
         container.addChild(labelText)
       }
     }
-    // 繝弱�繝亥｢�阜邱啀MS
+    // ノ�?ト�?��線PMS
     g.drawNoteLinesPMS = function (keys) {
       var idx = 0
       var grid = g.gridX
@@ -341,7 +341,7 @@ if (!self.__WB_pmw) {
       }
     }
 
-    // 繝弱�繝域緒逕ｻ繝｡繧ｽ繝�ラ
+    // ノ�?ト描画メソ�?��
     g.drawNotes = function () {
       switch (g.keys) {
         case 5:
@@ -359,9 +359,9 @@ if (!self.__WB_pmw) {
           break
       }
     }
-    // 繝弱�繝�DP
+    // ノ�?�?DP
     g.drawNotesDP = function (keys) {
-      // 繝ｬ繝ｼ繝ｳ蜈･繧梧崛縺�
+      // レーン入れ替�?
       var keych1P = keyCh[keys][0]
       var keych2P = keyCh[keys][1]
       var scch1P = "16"
@@ -386,7 +386,7 @@ if (!self.__WB_pmw) {
         }
       }
 
-      // 繝弱�繝域緒逕ｻ
+      // ノ�?ト描画
       var noteThickness = 4
       var blue = schemes[colorScheme].noteBlueFill
       var white = schemes[colorScheme].noteWhiteFill
@@ -547,9 +547,9 @@ if (!self.__WB_pmw) {
         })
       })
     }
-    // 繝弱�繝�SP
+    // ノ�?�?SP
     g.drawNotesSP = function (keys) {
-      // 繝ｬ繝ｼ繝ｳ蜈･繧梧崛縺�
+      // レーン入れ替�?
       var keych = keyCh[keys]
       if (g.pattern != null && g.pattern.length == keys) {
         var temp = keych
@@ -559,7 +559,7 @@ if (!self.__WB_pmw) {
         }
       }
 
-      // 繝弱�繝域緒逕ｻ
+      // ノ�?ト描画
       var noteThickness = 4
       var blue = schemes[colorScheme].noteBlueFill
       var white = schemes[colorScheme].noteWhiteFill // 0x8b8b8b
@@ -711,9 +711,9 @@ if (!self.__WB_pmw) {
         }
       })
     }
-    // 繝弱�繝�PMS
+    // ノ�?�?PMS
     g.drawNotesPMS = function (keys) {
-      // 繝ｬ繝ｼ繝ｳ蜈･繧梧崛縺�
+      // レーン入れ替�?
       var keych = keyCh[keys]
       if (g.pattern != null && g.pattern.length == keys) {
         var temp = keych
@@ -723,7 +723,7 @@ if (!self.__WB_pmw) {
         }
       }
 
-      // 繝弱�繝域緒逕ｻ
+      // ノ�?ト描画
       var schemes = [0xc4c4c4, 0xfff500, 0x99ff67, 0x30b9f9, 0xff6c6c, 0x30b9f9, 0x99ff67, 0xfff500, 0xc4c4c4]
       var lncolors = [0x909090, 0xc5b400, 0x00ab1e, 0x006bd5, 0xd60000, 0x006bd5, 0x00ab1e, 0xc5b400, 0x909090]
       var mineRed = 0x700000
@@ -795,7 +795,7 @@ if (!self.__WB_pmw) {
       })
     }
 
-    // BPM謠冗判繝｡繧ｽ繝�ラ
+    // BPM描画メソ�?��
     g.drawBPM = function () {
       var colorLine = schemes[colorScheme].bpmLine
       var colorText = schemes[colorScheme].bpmText
@@ -837,7 +837,7 @@ if (!self.__WB_pmw) {
       })
     }
 
-    // STOP謠冗判繝｡繧ｽ繝�ラ
+    // STOP描画メソ�?��
     g.drawStop = function () {
       var colorLine = schemes[colorScheme].stopLine
       var colorText = schemes[colorScheme].stopText
@@ -880,7 +880,7 @@ if (!self.__WB_pmw) {
       })
     }
 
-    // 謠冗判
+    // 描画
     g.drawMeasureLines()
     g.drawNoteLines()
     g.drawOuterBound()
@@ -890,12 +890,12 @@ if (!self.__WB_pmw) {
 
     return container
   }
-  // 繧ｵ繝�繝阪う繝ｫ繧ｪ繝悶ず繧ｧ繧ｯ繝�
+  // サ�?ネイルオブジェク�?
   function Thumbnail(param) {
     var lineWidth = 1
     var container = new PIXI.Container()
 
-    // 繧ｵ繝�繝阪う繝ｫ譫�繧剃ｽ懈�
+    // サ�?ネイル�?を作�?
     g = new PIXI.Graphics()
     g.beginFill(0x0)
     g.lineStyle(lineWidth, 0x404040, 1)
@@ -907,24 +907,24 @@ if (!self.__WB_pmw) {
     g.endFill()
     container.addChild(g)
 
-    // 繧ｵ繝�繝阪う繝ｫ菴懈�
+    // サ�?ネイル作�?
     container.widthShrinkRatio = renderer.width / stage.width
     container.heightShrinkRatio = thumbnailHeight / stage.height
     var texture = stage.generateTexture(renderer, 2 * container.widthShrinkRatio, PIXI.SCALE_MODES.NEAREST)
     container.thumbnail = new PIXI.Sprite(texture)
     container.thumbnail.width = renderer.width /*- leftMargin - rightMargin*/
     container.thumbnail.height = thumbnailHeight
-    // CANVAS 縺ｧ縺ｯ縺�∪縺上せ繝励Λ繧､繝医′菴懈�縺ｧ縺阪↑縺�ｼ溘�縺ｧ辟｡陦ｨ遉ｺ縺ｫ
+    // CANVAS では�?��くスプライトが作�?できな�?���?で無表示に
     if (renderer.type != PIXI.RENDERER_TYPE.CANVAS) container.addChild(container.thumbnail)
 
-    // 陦ｨ遉ｺ荳ｭ鬆伜沺縺ｮ逋ｽ譫�繧剃ｽ懈�
+    // 表示中領域の白�?を作�?
     container.drawViewBox = function () {
       if (container.viewBox == null) {
         container.viewBox = new PIXI.Container()
 
-        // 繧ｰ繝ｬ繝ｼ繝懊ャ繧ｯ繧ｹ
+        // グレーボックス
         var grayMask = new PIXI.Graphics()
-        //蟾ｦ
+        //左
         grayMask.beginFill(0xffffff)
         grayMask.lineStyle(lineWidth, 0x404040, 1)
         grayMask.moveTo(0, 0)
@@ -932,32 +932,32 @@ if (!self.__WB_pmw) {
         grayMask.lineTo(-renderer.width, thumbnailHeight)
         grayMask.lineTo(0, thumbnailHeight)
         grayMask.lineTo(0, 0)
-        // 蜿ｳ
+        // 右
         grayMask.moveTo(renderer.width * container.widthShrinkRatio, 0)
         grayMask.lineTo(renderer.width, 0)
         grayMask.lineTo(renderer.width, thumbnailHeight)
         grayMask.lineTo(renderer.width * container.widthShrinkRatio, thumbnailHeight)
         grayMask.lineTo(renderer.width * container.widthShrinkRatio, 0)
         grayMask.endFill()
-        // 繧｢繝ｫ繝輔ぃ
+        // アルファ
         grayMask.alpha = 0.4
-        // 繧ｯ繝ｪ繝�け蜿ｯ閭ｽ縺ｫ縺吶ｋ
+        // クリ�?��可能にする
         grayMask.buttonMode = true
         grayMask.interactive = true
-        grayMask.hitArea = new PIXI.Rectangle(-renderer.width, 0, 2 * renderer.width, thumbnailHeight + 50) // +50: 縺ｯ縺ｿ蜃ｺ縺励け繝ｪ繝�け蜿ｯ閭ｽ鬆伜沺
+        grayMask.hitArea = new PIXI.Rectangle(-renderer.width, 0, 2 * renderer.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
         grayMask.on("mousedown", onClick).on("touchstart", onClick)
 
         container.viewBox.addChild(grayMask)
 
         var frame = new PIXI.Graphics()
         frame.lineStyle(lineWidth, 0xffffff, 1)
-        //譫�縺ｮ謠冗判
+        //�?の描画
         frame.moveTo(lineWidth, 0)
         frame.lineTo(renderer.width * container.widthShrinkRatio, 0)
         frame.lineTo(renderer.width * container.widthShrinkRatio, thumbnailHeight)
         frame.lineTo(lineWidth, thumbnailHeight)
         frame.lineTo(lineWidth, 0)
-        // 繝峨Λ繝�げ蜿ｯ閭ｽ縺ｫ縺吶ｋ
+        // ドラ�?��可能にする
         frame.buttonMode = true
         frame.interactive = true
         frame.hitArea = new PIXI.Rectangle(
@@ -965,7 +965,7 @@ if (!self.__WB_pmw) {
           0,
           renderer.width * container.widthShrinkRatio - lineWidth,
           thumbnailHeight + 50
-        ) // +50: 縺ｯ縺ｿ蜃ｺ縺励け繝ｪ繝�け蜿ｯ閭ｽ鬆伜沺
+        ) // +50: はみ出しクリ�?��可能領域
         frame
           .on("mousedown", onDragStart)
           .on("touchstart", onDragStart)
@@ -997,7 +997,7 @@ if (!self.__WB_pmw) {
     if (stage == null) {
       // update canvas
       if (renderer != null) {
-        renderer.destroy(true) // GPU 繝｡繝｢繝ｪ繝ｪ繝ｼ繧ｯ蟇ｾ遲�
+        renderer.destroy(true) // GPU メモリリーク対�?
       }
       renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight - headerHeight, {
         backgroundColor: schemes[colorScheme].backgroundFill,
@@ -1007,7 +1007,7 @@ if (!self.__WB_pmw) {
       renderer.clearBeforeRender = schemes[colorScheme].backgroundFill != 0x000000
       renderer.preserveDrawingBuffer = true
       if (renderer.type == PIXI.RENDERER_TYPE.CANVAS) {
-        // CANVAS 縺ｧ縺ｯ騾乗�繧ｪ繝悶ず繧ｧ繧ｯ繝医�謠冗判縺後♀縺九＠縺上↑繧九�縺ｧ蜈�↓謌ｻ縺�
+        // CANVAS では透�?オブジェクト�?描画がおかしくなる�?で�?��戻�?
         renderer.clearBeforeRender = true
       }
 
@@ -1019,7 +1019,7 @@ if (!self.__WB_pmw) {
       }
     }
 
-    // 繧ｳ繝ｳ繝�リ縺ｫ霑ｽ蜉�
+    // コン�?��に追�?
     var initStage = false
     if (stage == null) {
       initStage = true
@@ -1083,19 +1083,19 @@ if (!self.__WB_pmw) {
     stage.position.x = 0
     stage.position.y = 0
 
-    // 繧ｵ繝�繝阪う繝ｫ繧ｪ繝悶ず繧ｧ繧ｯ繝医ｒ菴懈�
+    // サ�?ネイルオブジェクトを作�?
     thumbnail = Thumbnail()
 
     thumbnail.position.x = 0
     thumbnail.position.y = posYinit + bottomMargin
 
-    // 荳崎ｦ√↑繝ｬ繝ｳ繝繝ｪ繝ｳ繧ｰ繧堤┌蜉ｹ蛹�
+    // 不要なレンダリングを無効�?
     //for (var i = 0; i < stage.children.length; i++) {
     //    if (-stage.position.x - stage.children[i].width <= stage.children[i].position.x && stage.children[i].position.x <= -stage.position.x + 2 * renderer.width) stage.children[i].visible = true;
     //    else stage.children[i].visible = false;
     //}
 
-    // 繧ｳ繝ｳ繝�リ縺ｫ霑ｽ蜉�縺ｨ繝ｬ繝ｳ繝繝ｪ繝ｳ繧ｰ
+    // コン�?��に追�?とレンダリング
     base = new PIXI.Container()
     base.addChild(stage)
     base.addChild(thumbnail)
@@ -1205,7 +1205,7 @@ if (!self.__WB_pmw) {
       return key + "=" + value
     }).join("&")
     history.replaceState("", "", pathName)
-    // tweet繝懊ち繝ｳ縺ｮ繝ｪ繝ｳ繧ｯ蜈医ｒ蜷梧悄
+    // tweetボタンのリンク先を同期
     $("#tweet_button").attr(
       "href",
       "https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data.title)
@@ -1276,7 +1276,7 @@ if (!self.__WB_pmw) {
   }
 
   function start(tempParam) {
-    // URL繝代Λ繝｡繝ｼ繧ｿ縺ｮ繧ｻ繝�ヨ
+    // URLパラメータのセ�?��
     // - md5: hash
     if (tempParam.md5 != null) {
       urlParam.md5 = md5 = tempParam.md5
@@ -1308,15 +1308,15 @@ if (!self.__WB_pmw) {
     }
 
     // - o: keys pattern
-    // 繝ｩ繝ｳ繝繝�驟咲ｽｮ蛻晄悄繝代ち繝ｼ繝ｳ
+    // ランダ�?配置初期パターン
     $("#random_pattern_input").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
     $("#random_pattern_input_2p").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
-    // 莠呈鋤諤ｧ遒ｺ菫�
+    // 互換性確�?
     if (tempParam.o != null && keys >= 10 && tempParam.o.length == keys) {
       tempParam.o2 = tempParam.o.substr(keys / 2)
       tempParam.o = tempParam.o.substr(0, keys / 2)
     }
-    // pattern 蛻晄悄蛹�
+    // pattern 初期�?
     const default_pattern = validateKeyPattern(0, keys >= 10 ? keys / 2 : keys)[1]
     pattern = keys >= 10 ? default_pattern.concat(default_pattern) : default_pattern
     if (tempParam.o != null && tempParam.o > 0) {
@@ -1382,7 +1382,7 @@ if (!self.__WB_pmw) {
       }
     )
 
-    // 讌ｽ譖ｲ諠��ｱ縺ｮ險ｭ螳�
+    // 楽曲�??�の設�?
     document.title = document.title + data.title
     $("#title").text(data.title)
     $("#artist").text(data.artist)
@@ -1452,12 +1452,12 @@ if (!self.__WB_pmw) {
         setUrlParam()
       })
     if (keys == 10 || keys == 14) {
-      // DP 逕ｨ縺ｫ繧ｪ繝励す繝ｧ繝ｳ陦ｨ險倥ｒ螟画峩
+      // DP 用にオプション表記を変更
       $("#playside_text").text("flip: ")
       $("#playside_text_1p").text("OFF")
       $("#playside_text_2p").text("ON")
     } else if (keys == 9) {
-      // PMS 縺ｫ繧ｵ繧､繝峨�縺ｪ縺�
+      // PMS にサイド�?な�?
       $("#playside_option").css("display", "none")
     }
     // - option 1P
@@ -1466,7 +1466,7 @@ if (!self.__WB_pmw) {
     } else {
       $("#menu_box_option_2p").css("display", "none")
     }
-    $("#random_pattern_input").attr("maxlength", keys >= 10 ? keys / 2 : keys) // 譁�ｭ玲焚蛻ｶ髯�=KEY謨ｰ
+    $("#random_pattern_input").attr("maxlength", keys >= 10 ? keys / 2 : keys) // �?��数制�?=KEY数
     if (!urlParam.o || urlParam.o == 0) {
       $("#option_off")[0].checked = true
     } else if (urlParam.o == 1) {
@@ -1519,7 +1519,7 @@ if (!self.__WB_pmw) {
       $("#option_random").trigger("change")
     })
     // - option 2P
-    $("#random_pattern_input_2p").attr("maxlength", keys >= 10 ? keys / 2 : keys) // 譁�ｭ玲焚蛻ｶ髯�=KEY謨ｰ
+    $("#random_pattern_input_2p").attr("maxlength", keys >= 10 ? keys / 2 : keys) // �?��数制�?=KEY数
     if (!urlParam.o2 || urlParam.o2 == 0) {
       $("#option_off_2p")[0].checked = true
     } else if (urlParam.o == 1) {
@@ -1651,7 +1651,7 @@ if (!self.__WB_pmw) {
       }
       setUrlParam()
     } else {
-      alert("BMS繝輔ぃ繧､繝ｫ縺碁幕縺代∪縺帙ｓ縺ｧ縺励◆")
+      alert("BMSファイルが開けませんでした")
     }
     location.reload()
   }
@@ -1660,10 +1660,10 @@ if (!self.__WB_pmw) {
     // show loading spinner
     HoldOn.open()
 
-    // URL繝代Λ繝｡繝ｼ繧ｿ縺ｮ隗｣譫�
+    // URLパラメータの解�?
     var tempParam = getUrlParam()
 
-    // 隴憺擇繝��繧ｿ縺ｮ蜿門ｾ�
+    // 譜面�??タの取�?
     $.ajax({
       url: "marisa(ANOTHER7).bme", //"search?md5=" + tempParam.md5,
       type: "get",
@@ -1684,7 +1684,7 @@ if (!self.__WB_pmw) {
     })
   })
 
-  // 逕ｻ蜒丈ｿ晏ｭ�
+  // 画像保�?
   function screenshot() {
     renderer.render(base)
     renderer.view.toBlob(function (blob) {
@@ -1779,7 +1779,7 @@ const openBMS = (bmsSource) => {
     var res = true
     if (data.notes > 100000) {
       res = confirm(
-        "10荳�ヮ繝ｼ繝�ｻ･荳翫�隴憺擇繧帝幕縺薙≧縺ｨ縺励※縺�∪縺兔n邯夊｡後☆繧九→繝悶Λ繧ｦ繧ｶ縺後け繝ｩ繝�す繝･縺吶ｋ蜿ｯ閭ｽ諤ｧ縺後≠繧翫∪縺�"
+        "10万ノーツ以上の譜面を開こうとしています\n続行するとブラウザがクラッシュする可能性があります"
       )
     }
     if (res) {
