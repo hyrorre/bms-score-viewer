@@ -1706,7 +1706,7 @@ const openBMS = (bmsSource) => {
 
   const timeSignatures = chart.timeSignatures._values
   let ribbitResponse = {
-    artist: headers.artist,
+    artist: headers.artist + (headers.subartist ? " " + headers.subartist : ""),
     bpm: headers.bpm,
     genre: headers.genre,
     keys: parseInt(tempParam.keys) || 7,
@@ -1715,7 +1715,7 @@ const openBMS = (bmsSource) => {
     score: [...Array(objects.slice(-1)[0].measure + 1).keys()].map(() => {
       return { length: 72 }
     }),
-    title: headers.title,
+    title: headers.title + (headers.subtitle ? " " + headers.subtitle : ""),
     total: headers.total,
     unit: 72,
   }
