@@ -1389,7 +1389,7 @@ if (!self.__WB_pmw) {
     $("#bpm").text(data.bpm)
     $("#totalnotes").text(data.notes)
     $("#total").text(data.total)
-    $("#link_to_lr2ir").attr("href", "http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + md5)
+    $("#link_to_lr2ir").attr("href", "http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + getUrlParam().md5)
     $("#tweet_button").attr(
       "href",
       "https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data.title)
@@ -1602,6 +1602,7 @@ if (!self.__WB_pmw) {
       })
 
     // - open BMS
+    /*
     $("#filer_input").filer({
       changeInput:
         '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text">Drag & Drop a BMS file here or click</div></div></div>',
@@ -1639,6 +1640,7 @@ if (!self.__WB_pmw) {
         reader.readAsText(blob, "shift-jis")
       },
     })
+    */
 
     // - enable all inputs as ionCheckRadio
     $("input[type='radio'], input[type='checkbox']").ionCheckRadio()
@@ -1665,23 +1667,20 @@ if (!self.__WB_pmw) {
 
     // 譜面�??タの取�?
     $.ajax({
-      url: "marisa(ANOTHER7).bme", //"search?md5=" + tempParam.md5,
+      url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
       type: "get",
       dataType: "text",
-      beforeSend: function (xhr) {
-        xhr.overrideMimeType("text/plain;charset=Shift_JIS")
-      },
     }).then((response) => {
-      if (localStorage.getItem("read_bms") !== null && localStorage.getItem("read_bms_md5") !== null) {
-        const localStorageBMS = localStorage.getItem("read_bms")
-        urlParam.md5 = localStorage.getItem("read_bms_md5")
-        //localStorage.removeItem("read_bms")
-        openBMS(localStorageBMS)
-      } else {
-        localStorage.setItem("read_bms_md5", "f8dcdfe070630bbb365323c662561a1a")
-        openBMS(response)
-      }
-    })
+        console.log(response)
+        var dataJson = JSON.parse(response)
+        const decodedArray = atob(dataJson["data"]);
+        let bms = Encoding.convert(decodedArray, {
+          to: 'UNICODE',
+          from: 'SJIS',
+          type: 'string'
+        });
+        openBMS(bms)
+    }, () => alert("BMSファイルが開けませんでした"))
   })
 
   // 画像保�?
@@ -1695,7 +1694,6 @@ if (!self.__WB_pmw) {
 
 const openBMS = (bmsSource) => {
   const tempParam = getUrlParam()
-  tempParam.md5 = localStorage.getItem("read_bms_md5")
 
   const compileResult = bms.Compiler.compile(bmsSource)
   const chart = compileResult.chart
