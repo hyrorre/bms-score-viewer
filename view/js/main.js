@@ -1435,7 +1435,7 @@ if (!self.__WB_pmw) {
       },
     })
     // - keys
-    $(`#keys_${getUrlParam().hasOwnProperty("k") ? getUrlParam().k : 7}`)[0].checked = true
+    $(`#keys_${getUrlParam().hasOwnProperty("k") ? getUrlParam().k : data.keys}`)[0].checked = true
     $("#keys_button")
       .find("input")
       .on("change", function (event) {
@@ -1680,7 +1680,7 @@ if (!self.__WB_pmw) {
           from: 'SJIS',
           type: 'string'
         });
-        openBMS(bms)
+        openBMS(bms, dataJson["keys"])
     }, () => alert("BMSファイルが開けませんでした"))
   })
 
@@ -1710,7 +1710,7 @@ const getJudgeRank = (r) => {
   }
 };
 
-const openBMS = (bmsSource) => {
+const openBMS = (bmsSource, keys) => {
   const tempParam = getUrlParam()
 
   const compileResult = bms.Compiler.compile(bmsSource)
@@ -1727,7 +1727,7 @@ const openBMS = (bmsSource) => {
     artist: headers.artist + (headers.subartist ? " " + headers.subartist : ""),
     bpm: headers.bpm,
     genre: headers.genre,
-    keys: parseInt(tempParam.keys) || 7,
+    keys: keys || 7,
     lnmap: {},
     notes: objects.filter(x => x.channel.match(/[12][1-9]/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/[56][1-9]/)).length / 2,
     score: [...Array(objects.slice(-1)[0].measure + 1).keys()].map(() => {
