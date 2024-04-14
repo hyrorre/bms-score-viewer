@@ -17,5 +17,5 @@ export default defineConfig({
   build: {
     target: 'esnext',
   },
-  base: '/bms-score-viewer/',
+  base: '/',
 });
