@@ -1706,7 +1706,7 @@ const openBMS = (bmsSource, keys) => {
   if (lnobj === undefined && lntype === undefined)
     lntype = "1"
 
-  const objects = chart.objects._objects
+  const objects = chart.objects.allSorted()
 
   const timeSignatures = chart.timeSignatures._values
   let ribbitResponse = {
