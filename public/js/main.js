@@ -1701,8 +1701,10 @@ const openBMS = (bmsSource, keys) => {
   const chart = compileResult.chart
 
   const headers = chart.headers._data
-  const lntype = headers.lntype
+  let lntype = headers.lntype
   const lnobj = headers.lnobj
+  if (lnobj === undefined && lntype === undefined)
+    lntype = "1"
 
   const objects = chart.objects._objects
 
