@@ -1652,8 +1652,8 @@
 
     // 譜面�??タの取�?
     $.ajax({
-      //url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
-      url: "http://127.0.0.1/bms/score/get?md5=" + tempParam.md5,
+      url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
+      //url: "http://127.0.0.1/bms/score/get?md5=" + tempParam.md5,
       type: "get",
       dataType: "text",
     }).then((response) => {

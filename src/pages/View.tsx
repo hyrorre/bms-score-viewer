@@ -20,17 +20,17 @@ const View: Component = () => (
     <Meta name="viewport" content="width=device-width,user-scalable=no" />
     <Meta name="robots" content="noindex" />
     <Title>BMS Score Viewer -</Title>
-    <Link href="../css/html5reset-1.6.1.css" rel="stylesheet" />
-    <Link href="../plugin/mmenu/jquery.mmenu.all.css" rel="stylesheet" />
-    <Link href="../plugin/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet" />
-    <Link href="../plugin/ion.rangeSlider/css/ion.rangeSlider.skinNice.css" rel="stylesheet" />
-    <Link href="../plugin/ion.checkRadio/css/ion.checkRadio.css" rel="stylesheet" />
-    <Link href="../plugin/ion.checkRadio/css/ion.checkRadio.dark.css" rel="stylesheet" />
-    <Link href="../plugin/filer/css/jquery.filer.css" rel="stylesheet" />
-    <Link href="../plugin/filer/css/themes/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
-    <Link href="../plugin/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <Link href="../plugin/holdon/HoldOn.min.css" rel="stylesheet" />
-    <Link href="../css/main.css" rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/css/html5reset-1.6.1.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/mmenu/jquery.mmenu.all.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/ion.rangeSlider/css/ion.rangeSlider.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/ion.rangeSlider/css/ion.rangeSlider.skinNice.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/ion.checkRadio/css/ion.checkRadio.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/ion.checkRadio/css/ion.checkRadio.dark.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/filer/css/jquery.filer.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/filer/css/themes/jquery.filer-dragdropbox-theme.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
+    <Link href={import.meta.env.BASE_URL + "/css/main.css"} rel="stylesheet" />
     <div id="content">
       <div id="header">
         <div id="header_info">
