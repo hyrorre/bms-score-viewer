@@ -46,7 +46,7 @@ const Search: Component = () => {
           <AgGridSolid
             columnDefs={columnDefs}
             rowData={data()}
-            onRowClicked={(e) => window.open("/view/?md5=" + e.data.md5, '_blank')!.focus()}
+            onRowClicked={(e) => window.open("./view/?md5=" + e.data.md5, '_blank')!.focus()}
             quickFilterText={filter()}
             pagination={true}
             autoSizeStrategy={{
