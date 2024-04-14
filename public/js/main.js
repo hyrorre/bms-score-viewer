@@ -1367,7 +1367,7 @@
     )
 
     // 楽曲�??�の設�?
-    document.title = document.title + data.title
+    document.title = document.title + ' - ' + data.title
     $("#title").text(data.title)
     $("#artist").text(data.artist)
     $("#bpm").text(data.bpm)
