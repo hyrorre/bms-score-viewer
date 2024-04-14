@@ -1389,6 +1389,7 @@ if (!self.__WB_pmw) {
     $("#bpm").text(data.bpm)
     $("#totalnotes").text(data.notes)
     $("#total").text(data.total)
+    $("#rank").text(data.rank)
     $("#link_to_lr2ir").attr("href", "http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + getUrlParam().md5)
     $("#tweet_button").attr(
       "href",
@@ -1692,6 +1693,23 @@ if (!self.__WB_pmw) {
   }
 }
 
+const getJudgeRank = (r) => {
+  switch (r) {
+    case "0":
+      return "VERY HARD";
+    case "1":
+      return "HARD";
+    case "2":
+      return "NORMAL";
+    case "3":
+      return "EASY";
+    case "4":
+      return "VERY EASY";
+    default:
+      return "???";
+  }
+};
+
 const openBMS = (bmsSource) => {
   const tempParam = getUrlParam()
 
@@ -1716,7 +1734,8 @@ const openBMS = (bmsSource) => {
       return { length: 72 }
     }),
     title: headers.title + (headers.subtitle ? " " + headers.subtitle : ""),
-    total: headers.total,
+    total: headers.total ? headers.total : "undefined",
+    rank: getJudgeRank(headers.rank),
     unit: 72,
   }
 
