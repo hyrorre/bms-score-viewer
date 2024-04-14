@@ -1,0 +1,28 @@
+{
+  "name": "bms-score-viewer-search",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "solid-devtools": "^0.29.2",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-solid": "^2.8.2"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.3",
+    "@solidjs/router": "^0.13.2",
+    "ag-grid-community": "^31.2.1",
+    "ag-grid-solid": "^31.1.1",
+    "solid-js": "^1.8.11"
+  }
+}

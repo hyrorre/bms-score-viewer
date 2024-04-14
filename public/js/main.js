@@ -1,21 +1,3 @@
-var _____WB$wombat$assign$function_____ = function (name) {
-  return (self._wb_wombat && self._wb_wombat.local_init && self._wb_wombat.local_init(name)) || self[name]
-}
-if (!self.__WB_pmw) {
-  self.__WB_pmw = function (obj) {
-    this.__WB_source = obj
-    return this
-  }
-}
-{
-  let window = _____WB$wombat$assign$function_____("window")
-  let self = _____WB$wombat$assign$function_____("self")
-  let document = _____WB$wombat$assign$function_____("document")
-  let location = _____WB$wombat$assign$function_____("location")
-  let top = _____WB$wombat$assign$function_____("top")
-  let parent = _____WB$wombat$assign$function_____("parent")
-  let frames = _____WB$wombat$assign$function_____("frames")
-  let opener = _____WB$wombat$assign$function_____("opener")
 
   // グローバル変数
   var leftMargin = 20
@@ -30,6 +12,7 @@ if (!self.__WB_pmw) {
   var measures = []
   var data = null
   var md5 = ""
+  var keys = 7
 
   // - レンダリングパラメータ
   var urlParam = {}
@@ -413,6 +396,7 @@ if (!self.__WB_pmw) {
         var color = blue
         var colorLine = blueLine
         var lnColor = lnBlue
+        var lnColorLine = lnWhiteLine
         p[1].forEach(function (key) {
           if (color == blue) {
             color = white
@@ -489,11 +473,11 @@ if (!self.__WB_pmw) {
         [0, scch1P],
         [2 * keys + 9, scch2P],
       ].forEach(function (p) {
-        idx = p[0]
-        color = red
-        colorLine = red
-        lnColor = lnRed
-        lnColorLine = lnRedLine
+        var idx = p[0]
+        var color = red
+        var colorLine = red
+        var lnColor = lnRed
+        var lnColorLine = lnRedLine
         if (p[1] in g.lnmap) {
           g.lnmap[p[1]].forEach(function (area) {
             if (area[0][0] <= g.index && area[1][0] >= g.index) {
@@ -896,7 +880,7 @@ if (!self.__WB_pmw) {
     var container = new PIXI.Container()
 
     // サ�?ネイル�?を作�?
-    g = new PIXI.Graphics()
+    var g = new PIXI.Graphics()
     g.beginFill(0x0)
     g.lineStyle(lineWidth, 0x404040, 1)
     g.moveTo(0, 0)
@@ -1668,11 +1652,11 @@ if (!self.__WB_pmw) {
 
     // 譜面�??タの取�?
     $.ajax({
-      url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
+      //url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
+      url: "http://127.0.0.1/bms/score/get?md5=" + tempParam.md5,
       type: "get",
       dataType: "text",
     }).then((response) => {
-        console.log(response)
         var dataJson = JSON.parse(response)
         const decodedArray = atob(dataJson["data"]);
         let bms = Encoding.convert(decodedArray, {
@@ -1691,7 +1675,7 @@ if (!self.__WB_pmw) {
       saveAs(blob, "score.png")
     })
   }
-}
+
 
 const getJudgeRank = (r) => {
   switch (r) {
