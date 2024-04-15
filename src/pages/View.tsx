@@ -220,7 +220,7 @@ const View: Component = () => (
             <p>
               このアプリケーションは<a href="https://github.com/rib2bit">@rib2bit</a>様の<a href="http://ribbit.xyz/bms/score/">BMS Score Viewer</a>の非公認ミラーサイトです。本家のサービスが復旧するまでの間のみ一時的に公開します。
             </p>
-            <p>静的サイトとしての公開に伴うソースコードの改変部分について一切の著作者人格権を行使しません。</p><br></br>
+            <p>静的サイトとしての公開に伴うソースコードの改変部分について一切の著作者人格権を行使しません。</p><br />
             <p>
               GitHub: <a href="https://github.com/SayakaIsBaka/bms-score-viewer">SayakaIsBaka/bms-score-viewer</a>
             </p>

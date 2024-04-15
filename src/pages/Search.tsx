@@ -10,8 +10,6 @@ import Uploader from '../components/Uploader';
 const fetchData = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/query`);
   let r = await res.json();
-  for (var e of r)
-    e["date"] = new Date(e["date"]).toUTCString();
   return r;
 }
 
@@ -22,7 +20,7 @@ const Search: Component = () => {
     { field: 'keys', width: 10 },
     { field: 'bpm', headerName: 'BPM', width: 10 },
     { field: 'notes', width: 10 },
-    { field: 'date', headerName: 'Added date', width: 100 }
+    { field: 'date', headerName: 'Added date', width: 100, valueFormatter: (e: any) => new Date(e.value).toUTCString() }
   ];
 
   const [data] = createResource(fetchData);
