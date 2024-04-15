@@ -34,7 +34,7 @@ const View: Component = () => (
     <div id="content">
       <div id="header">
         <div id="header_info">
-          <span class="title_texts"><span id="title" /> / <span id="artist" /></span>
+          <span class="title_texts"><span id="title" /> / <span id="artist" /> </span>
           <span id="title_misc">
             - bpm: <span id="bpm" /> / Notes: <span id="totalnotes" /> / Total: <span id="total" /> / Rank: <span id="rank" />
           </span>
