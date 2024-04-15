@@ -65,7 +65,7 @@ const Uploader: Component = () => {
     };
 
     onMount(async () => {
-        uppy.use(DragDrop, { target: '#uploader', height: '20vh', note: "Supported files: .bms, .bme, .bml, .pms" })
+        uppy.use(DragDrop, { target: '#uploader', height: '20vh', note: "Supported files: .bms, .bme, .bml, .pms / Max file size: 5MB" })
             .use(Informer, { target: '#notify' })
             .use(VerifyStatusPlugin)
             .use(XHRUpload, { endpoint: `${import.meta.env.VITE_API_URL}/bms/score/register` })

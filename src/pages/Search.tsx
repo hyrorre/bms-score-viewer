@@ -34,7 +34,7 @@ const Search: Component = () => {
       <Uploader />
       <div class="filter-div px-4 pt-4">
           <input
-            class="block rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            class="block rounded-md border-0 py-1.5 pl-4 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             type="text"
             id="filter-text-box"
             placeholder="Search..."
@@ -42,7 +42,7 @@ const Search: Component = () => {
           />
         </div>
       <div class="ag-theme-quartz px-4 py-4" style={{ height: '65vh', width: '100%' }}>
-        {data.loading ? "Loading" : (
+        {data.loading ? "Loading..." : (
           <AgGridSolid
             columnDefs={columnDefs}
             rowData={data()}
