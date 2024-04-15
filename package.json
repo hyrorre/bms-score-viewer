@@ -24,6 +24,7 @@
     "@solidjs/router": "^0.13.2",
     "@uppy/core": "^3.10.0",
     "@uppy/drag-drop": "^3.1.0",
+    "@uppy/informer": "^3.1.0",
     "@uppy/xhr-upload": "^3.6.4",
     "ag-grid-community": "^31.2.1",
     "ag-grid-solid": "^31.1.1",

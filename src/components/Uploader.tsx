@@ -1,11 +1,13 @@
 import { onMount, type Component } from 'solid-js';
 import { MD5, lib } from 'crypto-js';
-import Uppy, { BasePlugin, UploadResult, UppyFile } from '@uppy/core';
+import Uppy, { BasePlugin, UploadResult } from '@uppy/core';
 import DragDrop from '@uppy/drag-drop';
 
 import '@uppy/core/dist/style.min.css';
 import '@uppy/drag-drop/dist/style.min.css';
+import '@uppy/informer/dist/style.min.css';
 import XHRUpload from '@uppy/xhr-upload';
+import Informer from '@uppy/informer';
 
 class VerifyStatusPlugin extends BasePlugin {
 	constructor(uppy: Uppy) {
@@ -64,6 +66,7 @@ const Uploader: Component = () => {
 
     onMount(async () => {
         uppy.use(DragDrop, { target: '#uploader', height: '20vh', note: "Supported files: .bms, .bme, .bml, .pms" })
+            .use(Informer, { target: '#notify' })
             .use(VerifyStatusPlugin)
             .use(XHRUpload, { endpoint: `${import.meta.env.VITE_API_URL}/bms/score/register` })
             .on('complete', uploadedFileRedirect);
@@ -72,6 +75,7 @@ const Uploader: Component = () => {
     return (
         <div class="px-4 pt-4">
           <div id="uploader"></div>
+          <div id="notify"></div>
         </div>
     )
 };
