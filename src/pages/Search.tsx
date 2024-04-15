@@ -6,6 +6,7 @@ import styles from './App.module.css';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import Uploader from '../components/Uploader';
+import ButtonUrl from '../components/ButtonUrl';
 
 const fetchData = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/query`);
@@ -20,7 +21,8 @@ const Search: Component = () => {
     { field: 'keys', width: 10 },
     { field: 'bpm', headerName: 'BPM', width: 10 },
     { field: 'notes', width: 10 },
-    { field: 'date', headerName: 'Added date', width: 100, valueFormatter: (e: any) => new Date(e.value).toUTCString() }
+    { field: 'date', headerName: 'Added date', width: 80, valueFormatter: (e: any) => new Date(e.value).toUTCString() },
+    { field: 'md5', headerName: 'LR2IR', width: 10, cellRenderer: (e: any) => (<ButtonUrl href={`http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${e.value}`} text={"LR2IR"} />)}
   ];
 
   const [data] = createResource(fetchData);
@@ -46,9 +48,9 @@ const Search: Component = () => {
           <AgGridSolid
             columnDefs={columnDefs}
             rowData={data()}
-            onRowClicked={(e) => window.open("./view?md5=" + e.data.md5, '_blank')!.focus()}
             quickFilterText={filter()}
             pagination={true}
+            onCellClicked={(e) => {e.colDef.field !== "md5" ? window.open(`./view?md5=${e.data.md5}`, '_blank')!.focus() : ""}} // Don't open if LR2IR column
             autoSizeStrategy={{
               type: 'fitGridWidth'
             }}
