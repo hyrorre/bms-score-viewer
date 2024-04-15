@@ -1710,7 +1710,7 @@ const openBMS = (bmsSource, keys) => {
 
   const timeSignatures = chart.timeSignatures._values
   let ribbitResponse = {
-    artist: (headers.artist || "") + (headers.subartist && headerHeight.artist ? " " : "") + (headers.subartist || ""),
+    artist: (headers.artist || "") + (headers.subartist && headers.artist ? " " : "") + (headers.subartist || ""),
     bpm: headers.bpm,
     genre: headers.genre,
     keys: keys || 7,
