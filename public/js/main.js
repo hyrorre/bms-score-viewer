@@ -618,7 +618,7 @@
           var _key = q[0]
           var _color = q[1]
           var _colorLine = q[2]
-          if (_key in g.score) {
+          if (g.score && _key in g.score) {
             g.score[_key].forEach(function (pos) {
               var noteLineWidth = _colorLine != null ? 1 : 0
               var noteLineAlpha = _colorLine != null ? 1 : 0
@@ -678,7 +678,7 @@
         var _key = q[0]
         var _color = q[1]
         var _colorLine = q[2]
-        if (_key in g.score) {
+        if (g.score && _key in g.score) {
           g.score[_key].forEach(function (pos) {
             var noteLineWidth = _colorLine != null ? 1 : 0
             var noteLineAlpha = _colorLine != null ? 1 : 0
@@ -788,7 +788,7 @@
       // BPM, exBPM
       var ch = ["03", "08"]
       ch.forEach(function (key) {
-        if (key in g.score) {
+        if (g.score && key in g.score) {
           g.score[key].forEach(function (pos) {
             g.lineStyle(lineH, colorLine, 1)
             g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH)
@@ -830,7 +830,7 @@
       // STOP
       var ch = ["09"]
       ch.forEach(function (key) {
-        if (key in g.score) {
+        if (g.score && key in g.score) {
           g.score[key].forEach(function (pos) {
             g.lineStyle(lineH, colorLine, 1)
             g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH)
@@ -1017,14 +1017,14 @@
       if (i >= measureFrom && i <= measureTo) {
         var measure
         if (measures[i] == null || initStage) {
-          var expLen = (data.score[i].length || data.unit) * scaleH
+          var expLen = ((data.score[i] ? data.score[i].length : 72) || data.unit) * scaleH
           measure = Measure({
             index: i,
             score: data.score[i],
             lnmap: data.lnmap,
             scaleW: scaleW,
             scaleH: scaleH,
-            length: data.score[i].length || data.unit,
+            length: ((data.score[i] ? data.score[i].length : 72) || data.unit),
             side: playSide,
             keys: keys == 14 || keys == 10 || keys == 9 || keys == 7 || keys == 5 ? keys : 7,
             pattern: pattern,
