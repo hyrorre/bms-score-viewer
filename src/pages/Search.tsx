@@ -16,13 +16,13 @@ const fetchData = async () => {
 
 const Search: Component = () => {
   const columnDefs = [
-    { field: 'title' },
-    { field: 'artist' },
-    { field: 'keys', width: 10 },
-    { field: 'bpm', headerName: 'BPM', width: 10 },
-    { field: 'notes', width: 10 },
-    { field: 'date', headerName: 'Added date', width: 80, valueFormatter: (e: any) => new Date(e.value).toUTCString() },
-    { field: 'md5', headerName: 'LR2IR', width: 10, cellRenderer: (e: any) => (<ButtonUrl href={`http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${e.value}`} text={"LR2IR"} />)}
+    { field: 'title', minWidth: 300},
+    { field: 'artist', minWidth: 300},
+    { field: 'keys', minWidth: 75, maxWidth: 75 },
+    { field: 'bpm', headerName: 'BPM', minWidth: 75, maxWidth: 75 },
+    { field: 'notes', minWidth: 75, maxWidth: 75 },
+    { field: 'date', headerName: 'Added date', minWidth: 200, maxWidth: 250, valueFormatter: (e: any) => new Date(e.value).toUTCString() },
+    { field: 'md5', headerName: 'LR2IR', minWidth: 75, maxWidth: 75, cellRenderer: (e: any) => (<ButtonUrl href={`http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=${e.value}`} text={"LR2IR"} />)}
   ];
 
   const [data] = createResource(fetchData);
