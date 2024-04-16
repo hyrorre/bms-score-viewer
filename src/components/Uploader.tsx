@@ -4,7 +4,7 @@ import Uppy, { BasePlugin, UploadResult } from '@uppy/core';
 import DragDrop from '@uppy/drag-drop';
 
 import '@uppy/core/dist/style.min.css';
-import '@uppy/drag-drop/dist/style.min.css';
+import './drag-drop.css';
 import '@uppy/informer/dist/style.min.css';
 import XHRUpload from '@uppy/xhr-upload';
 import Informer from '@uppy/informer';
