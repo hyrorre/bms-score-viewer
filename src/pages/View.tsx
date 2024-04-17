@@ -23,8 +23,6 @@ const View: Component = () => (
     <Link href={"../plugin/ion.rangeSlider/css/ion.rangeSlider.skinNice.css"} rel="stylesheet" />
     <Link href={"../plugin/ion.checkRadio/css/ion.checkRadio.css"} rel="stylesheet" />
     <Link href={"../plugin/ion.checkRadio/css/ion.checkRadio.dark.css"} rel="stylesheet" />
-    <Link href={"../plugin/filer/css/jquery.filer.css"} rel="stylesheet" />
-    <Link href={"../plugin/filer/css/themes/jquery.filer-dragdropbox-theme.css"} rel="stylesheet" />
     <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
     <Link href={"../plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
     <Link href={"../css/main.css"} rel="stylesheet" />

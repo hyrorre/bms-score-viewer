@@ -1,5 +1,5 @@
 import type { Component } from 'solid-js';
-import share from './share.svg'
+import share from '../assets/share.svg'
 
 const ButtonUrl: Component<{ href: string, text: string }> = (props) => {
     const openUrl = () => {
