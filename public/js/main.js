@@ -1172,7 +1172,7 @@ import { saveAs } from 'file-saver';
   }
 
   var resizeTimeout = false
-  $(window).resize(function () {
+  $(window).on("resize", function () {
     if (
       renderer == null ||
       (window.innerHeight - headerHeight == renderer.height && window.innerWidth == renderer.width)
@@ -1657,7 +1657,7 @@ import { saveAs } from 'file-saver';
     location.reload()
   }
 
-  $(document).ready(function () {
+  $(function () {
     // show loading spinner
     HoldOn.open()
 
