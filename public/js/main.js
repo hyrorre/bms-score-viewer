@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { saveAs } from 'file-saver';
 
   // グローバル変数
   var leftMargin = 20
@@ -1367,7 +1368,7 @@ import * as PIXI from 'pixi.js';
             position: "bottom",
             content: [
               '<a id="tweet_button" href="https://twitter.com/share?" target="_blank"><i class="fa fa-twitter fa-lg"></i></a>',
-              '<a id="save_ss_button" href="#" onclick="screenshot();"><i class="fa fa-camera-retro fa-lg"></a>',
+              '<a id="save_ss_button" href="#"><i class="fa fa-camera-retro fa-lg"></a>',
             ],
           },
         ],
@@ -1376,6 +1377,8 @@ import * as PIXI from 'pixi.js';
         // configurations
       }
     )
+
+    $("#save_ss_button").on('click', screenshot);
 
     // 楽曲�??�の設�?
     document.title = document.title + ' - ' + data.title
