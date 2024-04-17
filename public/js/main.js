@@ -159,7 +159,7 @@ import { saveAs } from 'file-saver';
       g.lineTo(g.innerWidth + lineWidth, 0)
       g.lineTo(g.innerWidth + lineWidth, g.innerHeight - lineWidth)
       g.lineTo(-lineWidth, g.innerHeight - lineWidth)
-      g.lineTo(-lineWidth, 0)
+      g.lineTo(-lineWidth, -1)
     }
 
     // 小節線描画メソ�?��
