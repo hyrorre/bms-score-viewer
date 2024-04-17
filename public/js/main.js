@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 
   // グローバル変数
   var leftMargin = 20
@@ -222,9 +223,10 @@
       g.endFill()
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
-        var fontSetting = "bold " + grid * 2 + "px Arial"
         var labelText = new PIXI.Text(g.index, {
-          font: fontSetting,
+          fontFamily: "Arial",
+          fontSize: grid * 2,
+          fontWeight: "bold",
           fill: schemes[colorScheme].labelText,
         })
         labelText.anchor.x = 0.5
@@ -275,9 +277,10 @@
       g.endFill()
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
-        var fontSetting = "bold " + grid * 2 + "px Arial"
         var labelText = new PIXI.Text(g.index, {
-          font: fontSetting,
+          fontFamily: "Arial",
+          fontSize: grid * 2,
+          fontWeight: "bold",
           fill: schemes[colorScheme].labelText,
         })
         labelText.anchor.x = 0.5
@@ -311,9 +314,10 @@
       g.endFill()
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
-        var fontSetting = "bold " + grid * 2 + "px Arial"
         var labelText = new PIXI.Text(g.index, {
-          font: fontSetting,
+          fontFamily: "Arial",
+          fontSize: grid * 2,
+          fontWeight: "bold",
           fill: schemes[colorScheme].labelText,
         })
         labelText.anchor.x = 0.5
@@ -803,9 +807,10 @@
               g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH)
             }
             if (colorText != null) {
-              var fontSetting = "bold " + g.gridX * 1.5 + "px Arial"
               var labelText = new PIXI.Text(Math.round(pos[1] * 10) / 10, {
-                font: fontSetting,
+                fontFamily: "Arial",
+                fontSize: g.gridX * 1.5,
+                fontWeight: "bold",
                 fill: colorText,
                 stroke: colorStroke,
                 strokeThickness: colorStroke != null ? 2 : 0,
@@ -846,9 +851,10 @@
             }
 
             if (colorText != null) {
-              var fontSetting = "bold " + g.gridX * 1.75 + "px Arial"
               var labelText = new PIXI.Text(/*Math.round(pos[1] * 10 / 48) / 10*/ "S", {
-                font: fontSetting,
+                fontFamily: "Arial",
+                fontSize: g.gridX * 1.75,
+                fontWeight: "bold",
                 fill: colorText,
                 stroke: colorStroke,
                 strokeThickness: colorStroke != null ? 2 : 0,
@@ -894,7 +900,10 @@
     // サ�?ネイル作�?
     container.widthShrinkRatio = renderer.width / stage.width
     container.heightShrinkRatio = thumbnailHeight / stage.height
-    var texture = stage.generateTexture(renderer, 2 * container.widthShrinkRatio, PIXI.SCALE_MODES.NEAREST)
+    var texture = renderer.generateTexture(stage, {
+      scaleMode: PIXI.SCALE_MODES.NEAREST,
+      resolution: 2 * container.widthShrinkRatio
+    })
     container.thumbnail = new PIXI.Sprite(texture)
     container.thumbnail.width = renderer.width /*- leftMargin - rightMargin*/
     container.thumbnail.height = thumbnailHeight
@@ -927,7 +936,7 @@
         grayMask.alpha = 0.4
         // クリ�?��可能にする
         grayMask.buttonMode = true
-        grayMask.interactive = true
+        grayMask.eventMode = 'static'
         grayMask.hitArea = new PIXI.Rectangle(-renderer.width, 0, 2 * renderer.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
         grayMask.on("mousedown", onClick).on("touchstart", onClick)
 
@@ -943,7 +952,7 @@
         frame.lineTo(lineWidth, 0)
         // ドラ�?��可能にする
         frame.buttonMode = true
-        frame.interactive = true
+        frame.eventMode = 'static'
         frame.hitArea = new PIXI.Rectangle(
           lineWidth,
           0,
@@ -983,13 +992,15 @@
       if (renderer != null) {
         renderer.destroy(true) // GPU メモリリーク対�?
       }
-      renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight - headerHeight, {
+      renderer = PIXI.autoDetectRenderer({
+        width: window.innerWidth,
+        height: window.innerHeight - headerHeight, 
         backgroundColor: schemes[colorScheme].backgroundFill,
+        clearBeforeRender: true, // Before: schemes[colorScheme].backgroundFill != 0x000000
+        preserveDrawingBuffer: true
       })
       // for performance optimization
       renderer.roundPixels = true
-      renderer.clearBeforeRender = schemes[colorScheme].backgroundFill != 0x000000
-      renderer.preserveDrawingBuffer = true
       if (renderer.type == PIXI.RENDERER_TYPE.CANVAS) {
         // CANVAS では透�?オブジェクト�?描画がおかしくなる�?で�?��戻�?
         renderer.clearBeforeRender = true
@@ -1051,7 +1062,7 @@
       }
     }
     if (initStage) {
-      stage.interactive = true
+      stage.eventMode = 'static'
       stage.buttonMode = true
       stage
         .on("mousedown", onDragStart)

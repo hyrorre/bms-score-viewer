@@ -2,7 +2,6 @@ import type { Component } from 'solid-js';
 import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
 import '../../public/js/bms-js.bundle.js'
 import 'https://unpkg.com/encoding-japanese@2.1.0/encoding.min.js'
-import '../../public/js/pixi.min.js'
 import '../../public/js/jquery-2.2.0.min.js'
 import '../../public/plugin/mmenu/jquery.mmenu.all.min.js'
 import '../../public/plugin/ion.rangeSlider/js/ion.rangeSlider.min.js'
