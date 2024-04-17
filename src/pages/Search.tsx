@@ -7,6 +7,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import Uploader from '../components/Uploader';
 import ButtonUrl from '../components/ButtonUrl';
+import GitHubLogo from '../assets/github-mark.svg';
 
 const fetchData = async () => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/query`);
@@ -31,7 +32,7 @@ const Search: Component = () => {
   return (
     <div style={styles.App}>
       <h1 class="text-3xl px-4 pt-4">
-        BMS Score Viewer
+        BMS Score Viewer <a href="https://github.com/SayakaIsBaka/bms-score-viewer" target='_blank'><img class="inline hover:brightness-200" title="View repo on GitHub" src={GitHubLogo} style={{ height: '16pt', width: '16pt' }}/></a>
       </h1>
       <Uploader />
       <div class="filter-div px-4 pt-4">
