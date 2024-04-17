@@ -1041,7 +1041,7 @@ import { saveAs } from 'file-saver';
             keys: keys == 14 || keys == 10 || keys == 9 || keys == 7 || keys == 5 ? keys : 7,
             pattern: pattern,
             unit: data.unit,
-            exratio: expLen > posYinit ? (posYinit - 1) / expLen : 1,
+            exratio: expLen > posYinit ? (posYinit - 2) / expLen : 1,
           })
           measures[i] = measure
         } else {
