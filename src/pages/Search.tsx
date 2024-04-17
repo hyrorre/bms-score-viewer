@@ -44,7 +44,7 @@ const Search: Component = () => {
             onInput={(e) => setFilter(e.currentTarget.value || "")}
           />
         </div>
-      <div class="ag-theme-quartz px-4 py-4" style={{ height: '65vh', width: '100%' }}>
+      <div class="ag-theme-quartz px-4 py-4" style={{ height: '63vh', width: '100%' }}>
         {data.loading ? "Loading..." : (
           <AgGridSolid
             columnDefs={columnDefs}

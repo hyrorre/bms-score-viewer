@@ -1,4 +1,4 @@
-import { onMount, type Component } from 'solid-js';
+import { createSignal, onMount, type Component } from 'solid-js';
 import { MD5, lib } from 'crypto-js';
 import Uppy, { BasePlugin, UploadResult } from '@uppy/core';
 import DragDrop from '@uppy/drag-drop';
@@ -8,12 +8,16 @@ import './drag-drop.css';
 import '@uppy/informer/dist/style.min.css';
 import XHRUpload from '@uppy/xhr-upload';
 import Informer from '@uppy/informer';
+import Toggle from './Toggle';
 
 class VerifyStatusPlugin extends BasePlugin {
-	constructor(uppy: Uppy) {
+    private: (() => boolean);
+
+	constructor(uppy: Uppy, opts: any) {
 		super(uppy);
 		this.id = 'VerifyStatus';
 		this.type = 'verify';
+        this.private = opts.private;
 	}
 
 	prepareUpload = async (fileIDs: string[]) => {
@@ -30,9 +34,18 @@ class VerifyStatusPlugin extends BasePlugin {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/status?md5=${hash}`);
         let r = await res.json();
         if (r["status"] === "OK") {
-            this.uppy.cancelAll();
-            window.location.href = `/view?md5=${hash}`;
+            if (r["private"] === this.private() || !(confirm(`Selected chart has already been uploaded with the following privacy setting: ${r["private"] ? "private" : "public"}; change to ${this.private() ? "private" : "public"}?`))) {
+                this.uppy.cancelAll();
+                window.location.href = `/view?md5=${hash}`;
+                return Promise.resolve();
+            }
         }
+        this.uppy.setFileState(fileIDs[0], {
+            xhrUpload: {
+                ...f.xhrUpload,
+                endpoint: `${import.meta.env.VITE_API_URL}/bms/score/register${this.private() ? "?private" : ""}`
+            }
+        })
 		return Promise.resolve();
 	};
 
@@ -46,6 +59,8 @@ class VerifyStatusPlugin extends BasePlugin {
 }
 
 const Uploader: Component = () => {
+    const [privateUp, setPrivateUp] = createSignal(false);
+
     const uppy = new Uppy({ autoProceed: true,
         allowMultipleUploadBatches: false,
         restrictions: {
@@ -67,15 +82,16 @@ const Uploader: Component = () => {
     onMount(async () => {
         uppy.use(DragDrop, { target: '#uploader', height: '20vh', note: "Supported files: .bms, .bme, .bml, .pms / Max file size: 5MB" })
             .use(Informer, { target: '#notify' })
-            .use(VerifyStatusPlugin)
             .use(XHRUpload, { endpoint: `${import.meta.env.VITE_API_URL}/bms/score/register` })
+            .use(VerifyStatusPlugin, { private: privateUp })
             .on('complete', uploadedFileRedirect);
     });
 
     return (
         <div class="px-4 pt-4">
-          <div id="uploader"></div>
-          <div id="notify"></div>
+            <Toggle text="Private upload" setValue={setPrivateUp} />
+            <div id="uploader"></div>
+            <div id="notify"></div>
         </div>
     )
 };
