@@ -42,6 +42,7 @@ class VerifyStatusPlugin extends BasePlugin {
         }
         this.uppy.setFileState(fileIDs[0], {
             xhrUpload: {
+                //@ts-ignore: it actually exists but Uppy types are a bit messed up I think
                 ...f.xhrUpload,
                 endpoint: `${import.meta.env.VITE_API_URL}/bms/score/register${this.private() ? "?private" : ""}`
             }
