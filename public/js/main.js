@@ -936,7 +936,7 @@ import { saveAs } from 'file-saver';
         // アルファ
         grayMask.alpha = 0.4
         // クリ�?��可能にする
-        grayMask.buttonMode = true
+        grayMask.cursor = 'pointer'
         grayMask.eventMode = 'static'
         grayMask.hitArea = new PIXI.Rectangle(-renderer.width, 0, 2 * renderer.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
         grayMask.on("mousedown", onClick).on("touchstart", onClick)
@@ -952,7 +952,7 @@ import { saveAs } from 'file-saver';
         frame.lineTo(lineWidth, thumbnailHeight)
         frame.lineTo(lineWidth, 0)
         // ドラ�?��可能にする
-        frame.buttonMode = true
+        frame.cursor = 'pointer'
         frame.eventMode = 'static'
         frame.hitArea = new PIXI.Rectangle(
           lineWidth,
@@ -1064,7 +1064,7 @@ import { saveAs } from 'file-saver';
     }
     if (initStage) {
       stage.eventMode = 'static'
-      stage.buttonMode = true
+      stage.cursor = 'pointer'
       stage
         .on("mousedown", onDragStart)
         .on("touchstart", onDragStart)
