@@ -967,8 +967,8 @@ import { saveAs } from 'file-saver';
           .on("mouseupoutside", onDragEnd)
           .on("touchend", onDragEnd)
           .on("touchendoutside", onDragEnd)
-          .on("mousemove", onDragMove)
-          .on("touchmove", onDragMove)
+          .on("globalmousemove", onDragMove)
+          .on("globaltouchmove", onDragMove)
         container.viewBox.addChild(frame)
 
         container.addChild(container.viewBox)
@@ -1072,8 +1072,8 @@ import { saveAs } from 'file-saver';
         .on("mouseupoutside", onDragEnd)
         .on("touchend", onDragEnd)
         .on("touchendoutside", onDragEnd)
-        .on("mousemove", onDragMove)
-        .on("touchmove", onDragMove)
+        .on("globalmousemove", onDragMove)
+        .on("globaltouchmove", onDragMove)
     }
     stage.hitArea = new PIXI.Rectangle(0, 0, stage.width, stage.height)
     stage.position.x = 0
