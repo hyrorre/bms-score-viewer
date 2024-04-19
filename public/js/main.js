@@ -1394,16 +1394,6 @@ import { saveAs } from 'file-saver';
       "https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data.title)
     )
 
-    // menu events
-    $("#menu_button").on("click", function (e) {
-      e.preventDefault()
-      if ($("html").hasClass("mm-opened")) {
-        $("#menu").data("mmenu").close()
-      } else {
-        $("#menu").data("mmenu").open()
-      }
-    })
-
     // sliders
     // - scaleW
     $("#scaleW-slider").ionRangeSlider({
@@ -1659,27 +1649,7 @@ import { saveAs } from 'file-saver';
 
   $(function () {
     // show loading spinner
-    HoldOn.open()
 
-    // URLパラメータの解�?
-    var tempParam = getUrlParam()
-
-    // 譜面�??タの取�?
-    $.ajax({
-      url: "https://bms-score-viewer-backend.sayakaisbaka.workers.dev/bms/score/get?md5=" + tempParam.md5, //"search?md5=" + tempParam.md5,
-      //url: "http://127.0.0.1/bms/score/get?md5=" + tempParam.md5,
-      type: "get",
-      dataType: "text",
-    }).then((response) => {
-        var dataJson = JSON.parse(response)
-        const decodedArray = atob(dataJson["data"]);
-        let bms = Encoding.convert(decodedArray, {
-          to: 'UNICODE',
-          from: 'SJIS',
-          type: 'string'
-        });
-        openBMS(bms, dataJson["keys"])
-    }, () => alert("BMSファイルが開けませんでした"))
   })
 
   // 画像保�?
@@ -1708,7 +1678,7 @@ const getJudgeRank = (r) => {
   }
 };
 
-const openBMS = (bmsSource, keys) => {
+export default function openBMS (bmsSource, keys) {
   const tempParam = getUrlParam()
 
   const compileResult = bms.Compiler.compile(bmsSource)

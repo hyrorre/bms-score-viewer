@@ -6,20 +6,24 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "postinstall": "patch-package"
   },
   "license": "MIT",
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
+    "@types/encoding-japanese": "^2.0.5",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "solid-devtools": "^0.29.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
+    "vite-plugin-node-polyfills": "^0.21.0",
     "vite-plugin-solid": "^2.8.2"
   },
   "dependencies": {
+    "@kobalte/core": "^0.12.6",
     "@solidjs/meta": "^0.29.3",
     "@solidjs/router": "^0.13.2",
     "@uppy/core": "^3.10.0",
@@ -28,9 +32,16 @@
     "@uppy/xhr-upload": "^3.6.4",
     "ag-grid-community": "^31.2.1",
     "ag-grid-solid": "^31.1.1",
+    "bms": "^51.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
     "crypto-js": "^4.2.0",
+    "encoding-japanese": "^2.1.0",
     "file-saver": "^2.0.5",
+    "patch-package": "^8.0.0",
     "pixi.js": "^7.4.2",
-    "solid-js": "^1.8.11"
+    "solid-js": "^1.8.11",
+    "tailwind-merge": "^2.2.2",
+    "tailwindcss-animate": "^1.0.7"
   }
 }
