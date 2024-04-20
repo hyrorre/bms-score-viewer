@@ -1,21 +1,10 @@
 import { Compiler } from "bms";
 
 // - レンダリングパラメータ
-var urlParam = {};
-var minScaleW = 4;
-var maxScaleW = 10;
-var minScaleH = 0.5;
-var maxScaleH = 3.5;
-var colorScheme = "default";
-
-function setUrlParam() {
-  if (urlParam == null || Object.keys(urlParam).length == 0) return;
-  var pathName = location.pathname + "?";
-  pathName += $.map(urlParam, function (value, key) {
-    return key + "=" + value;
-  }).join("&");
-  history.replaceState("", "", pathName);
-}
+const minScaleW = 4;
+const maxScaleW = 10;
+const minScaleH = 0.5;
+const maxScaleH = 3.5;
 
 export function validateKeyPattern(p, k) {
   var isValid = false;
@@ -56,6 +45,7 @@ export function validateKeyPattern(p, k) {
 
 function start(tempParam, data) {
   var keys = 7;
+  var urlParam = {};
   var pattern = null;
   // URLパラメータのセ�?��
   // - w: scale width
@@ -93,7 +83,7 @@ function start(tempParam, data) {
   }
   // - c: color scheme
   if (tempParam.c != null && tempParam.c == "mono") {
-    urlParam.c = colorScheme = "mono";
+    urlParam.c = "mono";
   }
 
   // - o: keys pattern
