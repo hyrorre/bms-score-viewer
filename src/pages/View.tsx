@@ -153,7 +153,8 @@ const View: Component = () => {
     setData(data);
     setKeys(data.keys)
     //setQueryParams(params)
-    setViewParams({ ...viewParams(), ...params })
+    setViewParams({ ...viewParams(), ...params, t: data.score.length - 1 })
+    document.title = document.title + ' - ' + data.title
   }
 
   onMount(async () => {
@@ -176,18 +177,7 @@ const View: Component = () => {
     setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
     setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
 
-    let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams)
-
-    if (randP1)
-      setRandomP1(randP1)
-    if (randP2)
-      setRandomP2(randP2)
-    setData(data);
-    //setQueryParams(params)
-    setKeys(data.keys)
-    setViewParams({ ...viewParams(), ...params, t: data.score.length - 1 })
-
-    document.title = document.title + ' - ' + data.title
+    reload()
     document.getElementById("header")!.style.visibility = "visible";
   });
 

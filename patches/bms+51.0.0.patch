@@ -1,3 +1,25 @@
+diff --git a/node_modules/bms/lib/compiler/index.js b/node_modules/bms/lib/compiler/index.js
+index 1862f64..9c0d784 100644
+--- a/node_modules/bms/lib/compiler/index.js
++++ b/node_modules/bms/lib/compiler/index.js
+@@ -13,7 +13,7 @@ var matchers = {
+         endif: /^#ENDIF$/i,
+         timeSignature: /^#(\d\d\d)02:(\S*)$/,
+         channel: /^#(?:EXT\s+#)?(\d\d\d)(\S\S):(\S*)$/,
+-        header: /^#(\w+)(?:\s+(\S.*))?$/,
++        header: /^#(\w+):?(?:\s*(\S.*))?$/,
+     },
+     dtx: {
+         random: /^#RANDOM\s+(\d+)$/i,
+@@ -91,7 +91,7 @@ function compile(text, options) {
+         })
+             .when(matcher.header, function (m) {
+             result.headerSentences += 1;
+-            if (!skipped)
++            if (!skipped && m[2] !== undefined)
+                 chart.headers.set(m[1], m[2]);
+         })
+             .else(function () {
 diff --git a/node_modules/bms/src/compiler/index.ts b/node_modules/bms/src/compiler/index.ts
 index f8a8725..12bca24 100644
 --- a/node_modules/bms/src/compiler/index.ts
