@@ -149,11 +149,10 @@ function start(tempParam, data) {
     tempParam.t < data.score.length - 1
   ) {
     urlParam.t = parseInt(tempParam.t);
+  } else {
+    urlParam.t = data.score.length - 1;
   }
-  // - replace url
-  //setUrlParam()
 
-  // render canvas
   data.pattern = pattern;
   return [data, urlParam, randP1, randP2];
 }

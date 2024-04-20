@@ -83,31 +83,27 @@ const View: Component = () => {
     const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
     switch (e) {
       case "0":
-        //delete urlParam.o
         setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : null })
-        //setUrlParam()
         break
       case "1":
-        //urlParam.o = 1
         setData({
           ...data(), pattern:
             keys() >= 10
               ? validateKeyPattern(1, keys() / 2)[1].concat(data().pattern.slice(keys() / 2))
               : validateKeyPattern(1, keys())[1]
         })
-        //setUrlParam()
         break
       case "2":
         var result = validateKeyPattern(randomP1(), keys() >= 10 ? keys() / 2 : keys())
         if (result[0]) {
           setData({ ...data(), pattern: keys() >= 10 ? result[1].concat(data().pattern.slice(keys() / 2)) : result[1] })
-          //urlParam.o = result[2]
-          //setUrlParam()
         } else {
           setViewParams({ ...viewParams(), o: 0 })
           updatePattern("0");
+          return
         }
     }
+    setQueryParams({o: (e === "0" ? "" : (e === "1" ? e : randomP1()))})
   };
 
   const updatePatternP2 = (e: string) => {
@@ -133,8 +129,10 @@ const View: Component = () => {
         } else {
           setViewParams({ ...viewParams(), o2: 0 })
           updatePatternP2("0");
+          return
         }
     }
+    setQueryParams({o2: (e === "0" ? "" : (e === "1" ? e : randomP2()))})
   };
 
   const screenshot = () => {
@@ -153,8 +151,8 @@ const View: Component = () => {
       setRandomP2(randP2)
     setData(data);
     setKeys(data.keys)
-    //setQueryParams(params)
-    setViewParams({ ...viewParams(), ...params, t: data.score.length - 1 })
+
+    setViewParams({ ...viewParams(), ...params })
     document.title = document.title + ' - ' + data.title
   }
 
@@ -234,6 +232,7 @@ const View: Component = () => {
                       defaultValue={[viewParams().w]}
                       onChangeEnd={(e) => {
                         setViewParams({ ...viewParams(), w: e[0] })
+                        setQueryParams({w: e[0]})
                       }}
                       class="py-3"
                     >
@@ -254,6 +253,7 @@ const View: Component = () => {
                       defaultValue={[viewParams().h]}
                       onChangeEnd={(e) => {
                         setViewParams({ ...viewParams(), h: e[0] })
+                        setQueryParams({h: e[0]})
                       }}
                       step={0.5}
                       class="py-3"
@@ -275,6 +275,7 @@ const View: Component = () => {
                       setData({...data(), keys: parseInt(e)})
                       updatePattern(viewParams().o.toString())
                       updatePatternP2(viewParams().o2.toString())
+                      setQueryParams({k: e})
                     }}>
                       <Grid cols={4} colsMd={5} class="w-full gap-2">
                         <For each={["5", "7", "9", "10", "14"]}>
@@ -294,6 +295,7 @@ const View: Component = () => {
                       <Label for="playside_button">{(keys() === 10 || keys() === 14) ? "Flip" : "Side"}</Label>
                       <RadioGroup id="playside_button" defaultValue={viewParams().p.toString()} onChange={(e) => {
                         setViewParams({ ...viewParams(), p: parseInt(e) })
+                        setQueryParams({p: e})
                       }}>
                         <Grid cols={2} class="w-full gap-2">
                           <For each={((keys() === 10 || keys() === 14) ? ["OFF", "ON"] : ["P1", "P2"])}>
@@ -372,7 +374,10 @@ const View: Component = () => {
                       minValue={0}
                       maxValue={data().score.length - 1 || 0}
                       defaultValue={[viewParams().f, viewParams().t]}
-                      onChangeEnd={(e) => setViewParams({ ...viewParams(), f: e[0], t: e[1] })}
+                      onChangeEnd={(e) => {
+                        setViewParams({ ...viewParams(), f: e[0], t: e[1] })
+                        setQueryParams({f: e[0], t: e[1]})
+                      }}
                       class="py-3"
                     >
                       <div class="flex w-full justify-between pb-3">
@@ -388,7 +393,10 @@ const View: Component = () => {
                   </div>
                   <div class="space-y-3 pt-3">
                     <Label for="color_button">Color</Label>
-                    <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)} onChange={(e) => setViewParams({ ...viewParams(), c: e.toLowerCase() })}>
+                    <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)} onChange={(e) => {
+                      setViewParams({ ...viewParams(), c: e.toLowerCase() })
+                      setQueryParams({c: e.toLowerCase()})
+                    }}>
                       <Grid cols={2} class="w-full gap-2">
                         <For each={["Default", "Mono"]}>
                           {(color) => (
