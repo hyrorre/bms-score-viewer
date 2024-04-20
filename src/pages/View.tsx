@@ -175,7 +175,7 @@ const View: Component = () => {
     setData(data);
     //setQueryParams(params)
     setKeys(data.keys)
-    setViewParams({...viewParams(), ...params})
+    setViewParams({...viewParams(), ...params, t: data.score.length - 1})
   
     document.title = document.title + ' - ' + data.title
     document.getElementById("header")!.style.visibility = "visible";
@@ -290,7 +290,7 @@ const View: Component = () => {
                   <div class="space-y-3 pt-3">
                     <Label for="playside_button">{(keys() === 10 || keys() === 14) ? "Flip" : "Side"}</Label>
                     <RadioGroup id="playside_button" defaultValue={viewParams().p.toString()} onChange={(e) => {
-                      setViewParams({...viewParams(), p: parseInt(e[1])})
+                      setViewParams({...viewParams(), p: parseInt(e)})
                     }}>
                       <Grid cols={2} class="w-full gap-2">
                         <For each={((keys() === 10 || keys() === 14) ? ["OFF", "ON"] : ["P1", "P2"])}>
@@ -368,7 +368,8 @@ const View: Component = () => {
                     <Slider
                       minValue={0}
                       maxValue={data().score.length - 1 || 0}
-                      defaultValue={[0, data().score.length - 1 || 0]}
+                      defaultValue={[viewParams().f, viewParams().t]}
+                      onChangeEnd={(e) => setViewParams({...viewParams(), f: e[0], t: e[1]})}
                       class="py-3"
                     >
                       <div class="flex w-full justify-between pb-3">
@@ -384,7 +385,7 @@ const View: Component = () => {
                   </div>
                   <div class="space-y-3 pt-3">
                     <Label for="color_button">Color</Label>
-                    <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)}>
+                    <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)} onChange={(e) => setViewParams({...viewParams(), c: e.toLowerCase()})}>
                       <Grid cols={2} class="w-full gap-2">
                         <For each={["Default", "Mono"]}>
                           {(color) => (
@@ -420,7 +421,7 @@ const View: Component = () => {
             </Sheet>
           </div>
         </div>
-        <BmsCanvas data={data()} />
+        <BmsCanvas data={data()} params={viewParams()} />
       </div>
     </MetaProvider>
   );

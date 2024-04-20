@@ -146,22 +146,6 @@ export function validateKeyPattern(p, k) {
         location.reload()
       })
 
-    // - clip
-    $("#clip_slider").ionRangeSlider({
-      type: "double",
-      min: 0,
-      max: Math.max(data.score.length - 1, 0),
-      from: measureFrom,
-      to: measureTo,
-      step: 1,
-      onFinish: function (data) {
-        urlParam.f = measureFrom = data.from
-        urlParam.t = measureTo = data.to
-        updateRender()
-        setUrlParam()
-      },
-    })
-
     // - color scheme
     $(colorScheme == "mono" ? "#color_mono" : "#color_default")[0].checked = true
     $("#color_button")
@@ -196,7 +180,6 @@ const getJudgeRank = (r) => {
 };
 
 export function openBMS (bmsSource, keys, tempParam) {
-
   const compileResult = Compiler.compile(bmsSource)
   const chart = compileResult.chart
 

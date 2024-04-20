@@ -1,7 +1,7 @@
 import { createEffect, onMount, type Component } from 'solid-js';
 import * as PIXI from 'pixi.js';
 
-const BmsCanvas: Component<{ data: any }> = (props) => {
+const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       // グローバル変数
   var leftMargin = 20
   var rightMargin = leftMargin
@@ -1176,6 +1176,12 @@ const BmsCanvas: Component<{ data: any }> = (props) => {
     if (props.data !== undefined && Object.keys(props.data).length !== 0) {
       measureTo = props.data.score.length - 1
       pattern = props.data.pattern
+      scaleH = props.params.h
+      scaleW = props.params.w
+      playSide = props.params.p
+      colorScheme = props.params.c
+      measureFrom = props.params.f
+      measureTo = props.params.t
       updateRender()
     }
   })
