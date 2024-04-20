@@ -395,7 +395,7 @@ const View: Component = () => {
                     <Label for="color_button">Color</Label>
                     <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)} onChange={(e) => {
                       setViewParams({ ...viewParams(), c: e.toLowerCase() })
-                      setQueryParams({c: e.toLowerCase()})
+                      setQueryParams({c: (e === "Default" ? "" : e.toLowerCase())})
                     }}>
                       <Grid cols={2} class="w-full gap-2">
                         <For each={["Default", "Mono"]}>
