@@ -175,11 +175,7 @@ const View: Component = () => {
 
   return (
     <MetaProvider>
-      <Meta charset="utf-8" />
-      <Meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <Meta name="viewport" content="width=device-width,user-scalable=no" />
       <Meta name="robots" content="noindex" />
-      <Title>BMS Score Viewer</Title>
       <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
       <Link href={"../plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
       <Link href={"../css/main.css"} rel="stylesheet" />

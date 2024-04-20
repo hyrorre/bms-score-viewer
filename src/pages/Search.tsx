@@ -1,5 +1,5 @@
 import type { Component } from 'solid-js';
-import { createSignal, createResource } from 'solid-js';
+import { createSignal, createResource, onMount } from 'solid-js';
 import AgGridSolid from 'ag-grid-solid';
 import styles from './App.module.css';
 
@@ -28,6 +28,10 @@ const Search: Component = () => {
 
   const [data] = createResource(fetchData);
   const [filter, setFilter] = createSignal("");
+
+  onMount(() => {
+    document.title = "BMS Score Viewer"; // Required because updating title dynamically in View doesn't work because of default title
+  })
 
   return (
     <div style={styles.App}>
