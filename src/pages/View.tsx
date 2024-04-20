@@ -58,6 +58,7 @@ const View: Component = () => {
     bpm: 0,
     notes: 0,
     total: 0,
+    keys: 0,
     rank: "",
     score: [],
     pattern: ""
@@ -143,7 +144,7 @@ const View: Component = () => {
     })
   }
 
-  const reload = () => {
+  const load = () => {
     let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams)
 
     if (randP1)
@@ -177,7 +178,7 @@ const View: Component = () => {
     setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
     setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
 
-    reload()
+    load()
     document.getElementById("header")!.style.visibility = "visible";
   });
 
@@ -271,7 +272,9 @@ const View: Component = () => {
                     <Label for="keys_button">Keys</Label>
                     <RadioGroup id="keys_button" defaultValue={keys().toString() || "7"} onChange={(e) => {
                       setKeys(parseInt(e))
-                      reload();
+                      setData({...data(), keys: parseInt(e)})
+                      updatePattern(viewParams().o.toString())
+                      updatePatternP2(viewParams().o2.toString())
                     }}>
                       <Grid cols={4} colsMd={5} class="w-full gap-2">
                         <For each={["5", "7", "9", "10", "14"]}>
