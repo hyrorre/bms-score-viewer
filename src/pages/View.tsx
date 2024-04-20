@@ -4,7 +4,6 @@ import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
 import '../../public/js/jquery-3.7.1.min.js';
 import '../../public/plugin/holdon/HoldOn.min.js';
-import '../../public/js/main.js';
 import { openBMS, validateKeyPattern } from '../../public/js/main.js';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
