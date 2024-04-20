@@ -1,11 +1,11 @@
-import { For, onMount, type Component } from 'solid-js';
+import { For, createSignal, onMount, type Component } from 'solid-js';
 import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
-import { Compiler } from 'bms';
+import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
 import '../../public/js/jquery-3.7.1.min.js';
 import '../../public/plugin/holdon/HoldOn.min.js';
 import '../../public/js/main.js';
-//import openBMS from '../../public/js/main.js';
+import openBMS from '../../public/js/main.js';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
 import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from "~/components/ui/radio-group";
@@ -14,129 +14,21 @@ import { Col, Grid } from '~/components/ui/grid.jsx';
 import { buttonVariants } from '~/components/ui/button.jsx';
 import { A, useSearchParams } from '@solidjs/router';
 import { Input } from '~/components/ui/input.jsx';
+import BmsCanvas from '~/components/BmsCanvas.jsx';
 
 const View: Component = () => {
   const [queryParams, setQueryParams] = useSearchParams();
+  const [data, setData] = createSignal({});
 
-  const getJudgeRank = (r: string | undefined) => {
-    switch (r) {
-      case "0":
-        return "VERY HARD";
-      case "1":
-        return "HARD";
-      case "2":
-        return "NORMAL";
-      case "3":
-        return "EASY";
-      case "4":
-        return "VERY EASY";
-      default:
-        return "???";
-    }
-  };
-
-  const openBMS = (bmsSource: string, keys: number) => {
-    const compileResult = Compiler.compile(bmsSource)
-    const chart = compileResult.chart
-  
-    const headers = chart.headers
-    let lntype = headers.get("lntype")
-    const lnobj = headers.get("lnobj")
-    if (lnobj === undefined && lntype === undefined)
-      lntype = "1"
-  
-    const objects = chart.objects.allSorted()
-  
-    const timeSignatures = chart.timeSignatures.getAll();
-    let ribbitResponse = {
-      artist: (headers.get("artist") || "") + (headers.get("subartist") && headers.get("artist") ? " " : "") + (headers.get("subartist") || ""),
-      bpm: headers.get("bpm"),
-      genre: headers.get("genre"),
-      keys: keys || 7,
-      lnmap: {},
-      notes: objects.filter(x => x.channel.match(/[12][1-9]/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/[56][1-9]/)).length / 2,
-      score: [...Array(objects.slice(-1)[0].measure + 1).keys()].map(() => {
-        return { length: 72 }
-      }),
-      title: (headers.get("title") || "") + (headers.get("title") && headers.get("subtitle") ? " " : "") + (headers.get("subtitle") || ""),
-      total: headers.get("total") ? headers.get("total") : "undefined",
-      rank: getJudgeRank(headers.get("rank")),
-      unit: 72,
-    }
-  
-    for (const [measure, timeSignature] of Object.entries(timeSignatures)) {
-      console.log(measure)
-      ribbitResponse.score[measure] = { length: timeSignature * 72 }
-    }
-  
-    let previousObjects = [...Array(36 ** 2).keys()].reduce(
-      (obj, i) => Object.assign(obj, { [i.toString(36)]: undefined }),
-      {}
-    )
-  
-    for (const object of objects) {
-      let channel = object.channel.charAt(0) === "5" ? `1${object.channel.charAt(1)}` : object.channel
-      channel = object.channel.charAt(0) === "6" ? `2${object.channel.charAt(1)}` : channel
-      if (!ribbitResponse.score[object.measure].hasOwnProperty(channel)) {
-        ribbitResponse.score[object.measure][channel] = []
-      }
-  
-      if (
-        lntype == "1" &&
-        (object.channel.charAt(0) === "5" || object.channel.charAt(0) === "6") &&
-        previousObjects[object.channel] !== undefined
-      ) {
-        if (!ribbitResponse.lnmap.hasOwnProperty(channel)) {
-          ribbitResponse.lnmap[channel] = []
-        }
-        ribbitResponse.lnmap[channel].push([
-          previousObjects[object.channel],
-          [object.measure, object.fraction * ribbitResponse.score[object.measure].length],
-        ])
-        previousObjects[object.channel] = undefined
-      } else if (lnobj !== undefined && object.value === lnobj) {
-        if (!ribbitResponse.lnmap.hasOwnProperty(object.channel)) {
-          ribbitResponse.lnmap[object.channel] = []
-        }
-        ribbitResponse.lnmap[object.channel].push([
-          previousObjects[object.channel],
-          [object.measure, object.fraction * ribbitResponse.score[object.measure].length],
-        ])
-      } else if (object.channel === "08") {
-        ribbitResponse.score[object.measure][object.channel].push([
-          object.fraction * ribbitResponse.score[object.measure].length,
-          headers[`bpm${object.value.toLowerCase()}`],
-          object.value,
-        ])
-      } else {
-        ribbitResponse.score[object.measure][channel].push([
-          object.fraction * ribbitResponse.score[object.measure].length,
-          parseInt(object.value, 16),
-        ])
-        previousObjects[object.channel] = [object.measure, object.fraction * ribbitResponse.score[object.measure].length]
-      }
-    }
-  
-    if (ribbitResponse != null && Object.keys(ribbitResponse).length != 0) {
-      data = ribbitResponse
-      var res = true
-      if (data.notes > 100000) {
-        res = confirm(
-          "10万ノーツ以上の譜面を開こうとしています\n続行するとブラウザがクラッシュする可能性があります"
-        )
-      }
-      if (res) {
-        start(queryParams)
-        return
-      }
-    } else {
-      HoldOn.close()
-      location.reload()
-    }
+  const screenshot = () => {
+    const canvas = document.getElementById("content")?.children[0] as HTMLCanvasElement
+    canvas.toBlob((blob) => {
+      saveAs(blob!, "score.png")
+    })
   }
 
   onMount(async () => {
-    // Loading spinner
+    HoldOn.open();
     let response: Response;
     try {
       response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`)
@@ -151,7 +43,10 @@ const View: Component = () => {
       from: 'SJIS',
       type: 'string'
     });
-    openBMS(bms, dataJson["keys"])
+    let data = openBMS(bms, dataJson["keys"])
+    setData(data);
+    document.title = document.title + ' - ' + data.title
+    document.getElementById("header")!.style.visibility = "visible";
   });
 
   return (
@@ -160,16 +55,16 @@ const View: Component = () => {
       <Meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <Meta name="viewport" content="width=device-width,user-scalable=no" />
       <Meta name="robots" content="noindex" />
-      <Title>BMS Score Viewer -</Title>
+      <Title>BMS Score Viewer</Title>
       <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
       <Link href={"../plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
       <Link href={"../css/main.css"} rel="stylesheet" />
-      <div id="content">
+      <div>
         <div id="header">
           <div id="header_info">
-            <span class="title_texts"><span id="title" /> / <span id="artist" /> </span>
+            <span class="title_texts"><span id="title">{data().title}</span> / {data().artist} </span>
             <span id="title_misc">
-              - bpm: <span id="bpm" /> / Notes: <span id="totalnotes" /> / Total: <span id="total" /> / Rank: <span id="rank" />
+              - bpm: {data().bpm} / Notes: {data().notes} / Total: {data().total} / Rank: {data().rank}
             </span>
           </div>
           <div id="header_bars">
@@ -183,16 +78,16 @@ const View: Component = () => {
                     <div id="menu_header">
                       <Grid cols={5} colsMd={5} class="w-full gap-1">
                         <Col span={2} spanMd={2}>
-                          <A id="link_to_lr2ir" href="" class={buttonVariants({ variant: "default" })}>LR2IR</A>
+                          <A id="link_to_lr2ir" href={"http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + queryParams.md5} target="_blank" class={buttonVariants({ variant: "default" })}>LR2IR</A>
                         </Col>
                         <Col>
                           <A id="link_to_home" href="/" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-home" /></A>
                         </Col>
                         <Col>
-                          <A id="tweet_button" href="https://twitter.com/share?" target="_blank" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-twitter" /></A>
+                          <A id="tweet_button" href={"https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data().title)} target="_blank" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-twitter" /></A>
                         </Col>
                         <Col>
-                          <A id="save_ss_button" href="#" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-camera" /></A>
+                          <A id="save_ss_button" onClick={screenshot} href={location.href} class={buttonVariants({ variant: "secondary" })}><i class="fa fa-camera" /></A>
                         </Col>
                       </Grid>
                     </div>
@@ -236,7 +131,7 @@ const View: Component = () => {
                   </div>
                   <div class="space-y-3 pt-3">
                     <Label for="keys_button">Keys</Label>
-                    <RadioGroup id="keys_button" value={"7"}>
+                    <RadioGroup id="keys_button" defaultValue={data().keys.toString() || 7} onChange={(e) => console.log(e)}>
                       <Grid cols={4} colsMd={5} class="w-full gap-2">
                         <For each={["5", "7", "9", "10", "14"]}>
                           {(key) => (
@@ -304,9 +199,9 @@ const View: Component = () => {
                   </div>
                   <div class="menu_box pt-3">
                     <Slider
-                      minValue={1}
-                      maxValue={100}
-                      defaultValue={[1, 100]}
+                      minValue={0}
+                      maxValue={data().score.length - 1 || 0}
+                      defaultValue={[0, data().score.length - 1 || 0]}
                       class="py-3"
                     >
                       <div class="flex w-full justify-between pb-3">
@@ -358,6 +253,7 @@ const View: Component = () => {
             </Sheet>
           </div>
         </div>
+        <BmsCanvas data={data()} />
       </div>
     </MetaProvider>
   );
