@@ -2,42 +2,14 @@ import { Compiler } from 'bms';
 
   // グローバル変数
   var data = null
-  var keys = 7
 
   // - レンダリングパラメータ
   var urlParam = {}
-  var scaleW = 7
   var minScaleW = 4
   var maxScaleW = 10
-  var scaleH = 2
   var minScaleH = 0.5
   var maxScaleH = 3.5
-  var playSide = 1
-  var pattern = null
-  var measureFrom = 0
-  var measureTo = 0
   var colorScheme = "default"
-
-  // 定数
-  var keypatInit = {
-    5: "12345",
-    7: "1234567",
-    9: "123456789",
-    10: "12345",
-    14: "1234567",
-  }
-
-  function getUrlParam() {
-    var vars = [],
-      hash
-    var hashes = window.location.href.slice(window.location.href.indexOf("?") + 1).split("&")
-    for (var i = 0; i < hashes.length; i++) {
-      hash = hashes[i].split("=")
-      vars.push(hash[0])
-      vars[hash[0]] = hash[1]
-    }
-    return vars
-  }
 
   function setUrlParam() {
     if (urlParam == null || Object.keys(urlParam).length == 0) return
@@ -46,14 +18,9 @@ import { Compiler } from 'bms';
       return key + "=" + value
     }).join("&")
     history.replaceState("", "", pathName)
-    // tweetボタンのリンク先を同期
-    $("#tweet_button").attr(
-      "href",
-      "https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data.title)
-    )
   }
 
-  function validateKeyPattern(p, k) {
+export function validateKeyPattern(p, k) {
     var isValid = false
     var ret = []
     var str = ""
@@ -90,56 +57,28 @@ import { Compiler } from 'bms';
     return [isValid, ret, str]
   }
 
-  function shuffle(arr) {
-    var i, j, tmp, length
-    for (length = arr.length, i = length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1))
-      tmp = arr[i]
-      arr[i] = arr[j]
-      arr[j] = tmp
-    }
-    return arr
-  }
-
-  function randomizeKeyPatternStr(str, keys) {
-    if (keys == 10 || keys == 14) {
-      // DP
-      var ar1 = str.split("")
-      var ar2 = ar1.splice(keys / 2, keys / 2)
-      ar1 = shuffle(ar1)
-      ar2 = shuffle(ar2)
-      return ar1.join("") + ar2.join("")
-    } else {
-      // SP
-      var ar = shuffle(str.split(""))
-      return ar.join("")
-    }
-  }
-
   function start(tempParam) {
+    var keys = 7
+    var pattern = null
     // URLパラメータのセ�?��
-    // - md5: hash
-    if (tempParam.md5 != null) {
-      urlParam.md5 = tempParam.md5
-    }
     // - w: scale width
     if (tempParam.w != null && tempParam.w >= minScaleW && tempParam.w <= maxScaleW) {
-      urlParam.w = scaleW = parseInt(tempParam.w)
+      urlParam.w = parseInt(tempParam.w)
     }
     // - h: scale height
     if (tempParam.h != null && tempParam.h >= minScaleH && tempParam.h <= maxScaleH) {
-      urlParam.h = scaleH = parseInt(2 * tempParam.h) / 2
+      urlParam.h = parseInt(2 * tempParam.h) / 2
     }
     // - p: play side or flip
     if (tempParam.p != null && (tempParam.p == "1" || tempParam.p == "2")) {
-      urlParam.p = playSide = parseInt(tempParam.p)
+      urlParam.p = parseInt(tempParam.p)
     }
     // - k: key nums (hidden option)
     if (
       tempParam.k != null &&
       (tempParam.k == "5" || tempParam.k == "7" || tempParam.k == "9" || tempParam.k == "10" || tempParam.k == "14")
     ) {
-      urlParam.k = keys = parseInt(tempParam.k)
+      urlParam.k = data.keys = keys = parseInt(tempParam.k)
     } else {
       keys = data.keys
     }
@@ -149,83 +88,54 @@ import { Compiler } from 'bms';
     }
 
     // - o: keys pattern
-    // ランダ�?配置初期パターン
-    $("#random_pattern_input").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
-    $("#random_pattern_input_2p").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
     // 互換性確�?
     if (tempParam.o != null && keys >= 10 && tempParam.o.length == keys) {
       tempParam.o2 = tempParam.o.substr(keys / 2)
       tempParam.o = tempParam.o.substr(0, keys / 2)
     }
     // pattern 初期�?
+    let randP1 = "";
     const default_pattern = validateKeyPattern(0, keys >= 10 ? keys / 2 : keys)[1]
     pattern = keys >= 10 ? default_pattern.concat(default_pattern) : default_pattern
     if (tempParam.o != null && tempParam.o > 0) {
       var result = validateKeyPattern(tempParam.o, keys >= 10 ? keys / 2 : keys)
       if (result[0]) {
         urlParam.o = result[2]
+
         pattern = keys >= 10 ? result[1].concat(pattern.slice(keys / 2)) : result[1]
         if (urlParam.o >= 2) {
-          $("#random_pattern_input").val(result[2])
+          randP1 = result[2]
         }
       }
     }
+    let randP2 = "";
     if (keys >= 10 && tempParam.o2 != null && tempParam.o2 > 0) {
       var result = validateKeyPattern(tempParam.o2, keys >= 10 ? keys / 2 : keys)
       if (result[0]) {
         urlParam.o2 = result[2]
         pattern = pattern.slice(0, keys / 2).concat(result[1])
         if (urlParam.o2 >= 2) {
-          $("#random_pattern_input_2p").val(result[2])
+          randP2 = result[2]
         }
       }
     }
     // - f
-    measureFrom = 0
+    let measureFrom = 0
     if (tempParam.f != null && tempParam.f > 0 && tempParam.f < data.score.length) {
-      urlParam.f = measureFrom = parseInt(tempParam.f)
+      urlParam.f = parseInt(tempParam.f)
     }
     // - t
-    measureTo = data.score.length - 1
+    let measureTo = data.score.length - 1
     if (tempParam.t != null && tempParam.t >= measureFrom && tempParam.t < data.score.length - 1) {
-      urlParam.t = measureTo = parseInt(tempParam.t)
+      urlParam.t = parseInt(tempParam.t)
     }
     // - replace url
-    setUrlParam()
+    //setUrlParam()
 
     // render canvas
-    return data;
+    data.pattern = pattern
+    return [data, urlParam, randP1, randP2];
 
-    $("#save_ss_button").on('click', screenshot);
-
-    // sliders
-    // - scaleW
-    $("#scaleW-slider").ionRangeSlider({
-      type: "single",
-      min: minScaleW,
-      max: maxScaleW,
-      from: scaleW,
-      step: 1,
-      onFinish: function (data) {
-        console.log("onFinish")
-        urlParam.w = scaleW = data.from
-        updateRender()
-        setUrlParam()
-      },
-    })
-    // - scaleH
-    $("#scaleH_slider").ionRangeSlider({
-      type: "single",
-      min: minScaleH,
-      max: maxScaleH,
-      from: scaleH,
-      step: 0.5,
-      onFinish: function (data) {
-        urlParam.h = scaleH = data.from
-        updateRender()
-        setUrlParam()
-      },
-    })
     // - keys
     $(`#keys_${getUrlParam().hasOwnProperty("k") ? getUrlParam().k : data.keys}`)[0].checked = true
     $("#keys_button")
@@ -235,133 +145,6 @@ import { Compiler } from 'bms';
         setUrlParam()
         location.reload()
       })
-    // - play side
-    $(playSide == 2 ? "#playside_2p" : "#playside_1p")[0].checked = true
-    $("#playside_button")
-      .find("input")
-      .on("change", function (event) {
-        urlParam.p = playSide = parseInt(this.value)
-        updateRender()
-        setUrlParam()
-      })
-    if (keys == 10 || keys == 14) {
-      // DP 用にオプション表記を変更
-      $("#playside_text").text("flip: ")
-      $("#playside_text_1p").text("OFF")
-      $("#playside_text_2p").text("ON")
-    } else if (keys == 9) {
-      // PMS にサイド�?な�?
-      $("#playside_option").css("display", "none")
-    }
-    // - option 1P
-    if (keys >= 10) {
-      $("#option_text").text("option 1P:")
-    } else {
-      $("#menu_box_option_2p").css("display", "none")
-    }
-    $("#random_pattern_input").attr("maxlength", keys >= 10 ? keys / 2 : keys) // �?��数制�?=KEY数
-    if (!urlParam.o || urlParam.o == 0) {
-      $("#option_off")[0].checked = true
-    } else if (urlParam.o == 1) {
-      $("#option_mirror")[0].checked = true
-    } else {
-      $("#option_random")[0].checked = true
-    }
-    $("#option_button")
-      .find("input")
-      .on("change", function (event) {
-        switch (this.value) {
-          case "0":
-            $("#option_off")[0].checked = true
-            delete urlParam.o
-            pattern = keys >= 10 ? default_pattern.concat(pattern.slice(keys / 2)) : null
-            updateRender()
-            setUrlParam()
-            break
-          case "1":
-            $("#option_mirror")[0].checked = true
-            urlParam.o = 1
-            pattern =
-              keys >= 10
-                ? validateKeyPattern(1, keys / 2)[1].concat(pattern.slice(keys / 2))
-                : validateKeyPattern(1, keys)[1]
-            updateRender()
-            setUrlParam()
-            break
-          case "2":
-            $("#option_random")[0].checked = true
-            var result = validateKeyPattern($("#random_pattern_input").val(), keys >= 10 ? keys / 2 : keys)
-            if (result[0]) {
-              pattern = keys >= 10 ? result[1].concat(pattern.slice(keys / 2)) : result[1]
-              urlParam.o = result[2]
-              updateRender()
-              setUrlParam()
-            } else {
-              $("#option_off").trigger("change")
-            }
-            break
-          default:
-            break
-        }
-      })
-    $("#random_pattern_auto_button").on("click", function (event) {
-      $("#random_pattern_input").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
-      $("#option_random").trigger("change")
-    })
-    $("#random_pattern_input").on("change", function (event) {
-      $("#option_random").trigger("change")
-    })
-    // - option 2P
-    $("#random_pattern_input_2p").attr("maxlength", keys >= 10 ? keys / 2 : keys) // �?��数制�?=KEY数
-    if (!urlParam.o2 || urlParam.o2 == 0) {
-      $("#option_off_2p")[0].checked = true
-    } else if (urlParam.o == 1) {
-      $("#option_mirror_2p")[0].checked = true
-    } else {
-      $("#option_random_2p")[0].checked = true
-    }
-    $("#option_button_2p")
-      .find("input")
-      .on("change", function (event) {
-        if (keys < 10) return
-        switch (this.value) {
-          case "0":
-            $("#option_off_2p")[0].checked = true
-            delete urlParam.o2
-            pattern = pattern.slice(0, keys / 2).concat(default_pattern)
-            updateRender()
-            setUrlParam()
-            break
-          case "1":
-            $("#option_mirror_2p")[0].checked = true
-            urlParam.o2 = 1
-            pattern = pattern.slice(0, keys / 2).concat(validateKeyPattern(1, keys / 2)[1])
-            updateRender()
-            setUrlParam()
-            break
-          case "2":
-            $("#option_random_2p")[0].checked = true
-            var result = validateKeyPattern($("#random_pattern_input_2p").val(), keys >= 10 ? keys / 2 : keys)
-            if (result[0]) {
-              pattern = pattern.slice(0, keys / 2).concat(result[1])
-              urlParam.o2 = result[2]
-              updateRender()
-              setUrlParam()
-            } else {
-              $("#option_off_2p").trigger("change")
-            }
-            break
-          default:
-            break
-        }
-      })
-    $("#random_pattern_auto_button_2p").on("click", function (event) {
-      $("#random_pattern_input_2p").val(randomizeKeyPatternStr(keypatInit[keys], keys >= 10 ? keys / 2 : keys))
-      $("#option_random_2p").trigger("change")
-    })
-    $("#random_pattern_input_2p").on("change", function (event) {
-      $("#option_random_2p").trigger("change")
-    })
 
     // - clip
     $("#clip_slider").ionRangeSlider({
@@ -412,8 +195,7 @@ const getJudgeRank = (r) => {
   }
 };
 
-export default function openBMS (bmsSource, keys) {
-  const tempParam = getUrlParam()
+export function openBMS (bmsSource, keys, tempParam) {
 
   const compileResult = Compiler.compile(bmsSource)
   const chart = compileResult.chart

@@ -13,7 +13,6 @@ const BmsCanvas: Component<{ data: any }> = (props) => {
   var stage: PIXI.Container | null  = null
   var thumbnail: PIXI.Container | null  = null
   var measures: any[] = []
-  var keys = 7
 
   // - レンダリングパラメータ
   var scaleW = 7
@@ -1026,7 +1025,7 @@ const BmsCanvas: Component<{ data: any }> = (props) => {
             scaleH: scaleH,
             length: ((props.data.score[i] ? props.data.score[i].length : 72) || props.data.unit),
             side: playSide,
-            keys: keys == 14 || keys == 10 || keys == 9 || keys == 7 || keys == 5 ? keys : 7,
+            keys: props.data.keys == 14 || props.data.keys == 10 || props.data.keys == 9 || props.data.keys == 7 || props.data.keys == 5 ? props.data.keys : 7,
             pattern: pattern,
             unit: props.data.unit,
             exratio: expLen > posYinit ? (posYinit - 2) / expLen : 1,
@@ -1176,6 +1175,7 @@ const BmsCanvas: Component<{ data: any }> = (props) => {
   createEffect(() => {
     if (props.data !== undefined && Object.keys(props.data).length !== 0) {
       measureTo = props.data.score.length - 1
+      pattern = props.data.pattern
       updateRender()
     }
   })

@@ -5,7 +5,7 @@ import Encoding from 'encoding-japanese';
 import '../../public/js/jquery-3.7.1.min.js';
 import '../../public/plugin/holdon/HoldOn.min.js';
 import '../../public/js/main.js';
-import openBMS from '../../public/js/main.js';
+import { openBMS, validateKeyPattern } from '../../public/js/main.js';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
 import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from "~/components/ui/radio-group";
@@ -16,9 +16,115 @@ import { A, useSearchParams } from '@solidjs/router';
 import { Input } from '~/components/ui/input.jsx';
 import BmsCanvas from '~/components/BmsCanvas.jsx';
 
+const keypatInit: any = {
+  5: "12345",
+  7: "1234567",
+  9: "123456789",
+  10: "12345",
+  14: "1234567",
+}
+
 const View: Component = () => {
+  const shuffle = (arr: any[]) => {
+    var i, j, tmp, length
+    for (length = arr.length, i = length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1))
+      tmp = arr[i]
+      arr[i] = arr[j]
+      arr[j] = tmp
+    }
+    return arr
+  };
+
+  const randomizeKeyPatternStr = (str: string, keys: number) => {
+    if (keys == 10 || keys == 14) {
+      // DP
+      var ar1 = str.split("")
+      var ar2 = ar1.splice(keys / 2, keys / 2)
+      ar1 = shuffle(ar1)
+      ar2 = shuffle(ar2)
+      return ar1.join("") + ar2.join("")
+    } else {
+      // SP
+      var ar = shuffle(str.split(""))
+      return ar.join("")
+    }
+  };
+
   const [queryParams, setQueryParams] = useSearchParams();
   const [data, setData] = createSignal({});
+  const [viewParams, setViewParams] = createSignal({
+    w: 7, //scaleW
+    h: 2, //scaleH
+    p: 1, //Playside / flip
+    c: 'default', //colorscheme
+    o: 0, //random pattern 1
+    o2: 0, //random pattern 2
+    f: 0, //from
+    t: 0, //to
+  });
+  const [randomP1, setRandomP1] = createSignal("")
+  const [randomP2, setRandomP2] = createSignal("")
+  const [keys, setKeys] = createSignal(0)
+
+  let bmsData = "";
+
+  const updatePattern = (e: string) => {
+    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
+    switch (e) {
+      case "0":
+        //delete urlParam.o
+        setData({...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : null})
+        //setUrlParam()
+        break
+      case "1":
+        //urlParam.o = 1
+        setData({...data(), pattern:
+          keys() >= 10
+            ? validateKeyPattern(1, keys() / 2)[1].concat(data().pattern.slice(keys() / 2))
+            : validateKeyPattern(1, keys())[1]
+        })
+        //setUrlParam()
+        break
+      case "2":
+        var result = validateKeyPattern(randomP1(), keys() >= 10 ? keys() / 2 : keys())
+        if (result[0]) {
+          setData({...data(), pattern: keys() >= 10 ? result[1].concat(data().pattern.slice(keys() / 2)) : result[1]})
+          //urlParam.o = result[2]
+          //setUrlParam()
+        } else {
+          setViewParams({...viewParams(), o: 0})
+          updatePattern("0");
+        }
+      }
+  };
+
+  const updatePatternP2 = (e: string) => {
+    if (keys() < 10) return
+    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
+    switch (e) {
+      case "0":
+        //delete urlParam.o2
+        setData({...data(), pattern: data().pattern.slice(0, keys() / 2).concat(default_pattern)})
+        //setUrlParam()
+        break
+      case "1":
+        //urlParam.o2 = 1
+        setData({...data(), pattern: data().pattern.slice(0, keys() / 2).concat(validateKeyPattern(1, keys() / 2)[1])})
+        //setUrlParam()
+        break
+      case "2":
+        var result = validateKeyPattern(randomP2(), keys() >= 10 ? keys() / 2 : keys())
+        if (result[0]) {
+          setData({...data(), pattern: data().pattern.slice(0, keys() / 2).concat(result[1])})
+          //urlParam.o2 = result[2]
+          //setUrlParam()
+        } else {
+          setViewParams({...viewParams(), o2: 0})
+          updatePatternP2("0");
+        }
+      }
+  };
 
   const screenshot = () => {
     const canvas = document.getElementById("content")?.children[0] as HTMLCanvasElement
@@ -27,24 +133,50 @@ const View: Component = () => {
     })
   }
 
+  const reload = () => {
+    let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams)
+
+    if (randP1)
+      setRandomP1(randP1)
+    if (randP2)
+      setRandomP2(randP2)
+    setData(data);
+    setKeys(data.keys)
+    //setQueryParams(params)
+    setViewParams({...viewParams(), ...params})
+  }
+
   onMount(async () => {
     HoldOn.open();
     let response: Response;
-    try {
-      response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`)
-    } catch (e) {
+    response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`)
+    if (!response.ok) {
       alert("BMSファイルが開けませんでした");
       return;
     }
     var dataJson = await response.json();
     const decodedArray = atob(dataJson["data"]);
-    let bms = Encoding.convert(decodedArray, {
+    bmsData = Encoding.convert(decodedArray, {
       to: 'UNICODE',
       from: 'SJIS',
       type: 'string'
     });
-    let data = openBMS(bms, dataJson["keys"])
+
+    setKeys(dataJson["keys"])
+    setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
+    setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
+  
+    let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams)
+
+    if (randP1)
+      setRandomP1(randP1)
+    if (randP2)
+      setRandomP2(randP2)
     setData(data);
+    //setQueryParams(params)
+    setKeys(data.keys)
+    setViewParams({...viewParams(), ...params})
+  
     document.title = document.title + ' - ' + data.title
     document.getElementById("header")!.style.visibility = "visible";
   });
@@ -98,7 +230,10 @@ const View: Component = () => {
                     <Slider
                       minValue={4}
                       maxValue={10}
-                      defaultValue={[7]}
+                      defaultValue={[viewParams().w]}
+                      onChangeEnd={(e) => {
+                        setViewParams({...viewParams(), w: e[0]})
+                      }}
                       class="py-3"
                     >
                       <div class="flex w-full justify-between pb-3">
@@ -115,7 +250,10 @@ const View: Component = () => {
                     <Slider
                       minValue={0.5}
                       maxValue={3.5}
-                      defaultValue={[2]}
+                      defaultValue={[viewParams().h]}
+                      onChangeEnd={(e) => {
+                        setViewParams({...viewParams(), h: e[0]})
+                      }}
                       step={0.5}
                       class="py-3"
                     >
@@ -131,7 +269,10 @@ const View: Component = () => {
                   </div>
                   <div class="space-y-3 pt-3">
                     <Label for="keys_button">Keys</Label>
-                    <RadioGroup id="keys_button" defaultValue={data().keys.toString() || 7} onChange={(e) => console.log(e)}>
+                    <RadioGroup id="keys_button" defaultValue={keys().toString() || "7"} onChange={(e) => {
+                      setKeys(parseInt(e))
+                      reload();
+                      }}>
                       <Grid cols={4} colsMd={5} class="w-full gap-2">
                         <For each={["5", "7", "9", "10", "14"]}>
                           {(key) => (
@@ -145,14 +286,17 @@ const View: Component = () => {
                       </Grid>
                     </RadioGroup>
                   </div>
+                  {keys() !== 9 ? (
                   <div class="space-y-3 pt-3">
-                    <Label for="playside_button">Side</Label>
-                    <RadioGroup id="playside_button">
+                    <Label for="playside_button">{(keys() === 10 || keys() === 14) ? "Flip" : "Side"}</Label>
+                    <RadioGroup id="playside_button" defaultValue={viewParams().p.toString()} onChange={(e) => {
+                      setViewParams({...viewParams(), p: parseInt(e[1])})
+                    }}>
                       <Grid cols={2} class="w-full gap-2">
-                        <For each={["P1", "P2"]}>
-                          {(side) => (
+                        <For each={((keys() === 10 || keys() === 14) ? ["OFF", "ON"] : ["P1", "P2"])}>
+                          {(side, i) => (
                             <Col>
-                              <RadioGroupItem value={side}>
+                              <RadioGroupItem value={(i() + 1).toString()}>
                                 <RadioGroupItemLabel>{side}</RadioGroupItemLabel>
                               </RadioGroupItem>
                             </Col>
@@ -160,14 +304,17 @@ const View: Component = () => {
                         </For>
                       </Grid>
                     </RadioGroup>
-                  </div>
+                  </div> ) : <></>}
                   <div class="space-y-3 pt-3">
-                    <Label for="option_button">Option</Label>
-                    <RadioGroup id="option_button">
+                    <Label for="option_button">{keys() >= 10 ? "Option 1P" : "Option"}</Label>
+                    <RadioGroup id="option_button" value={viewParams().o >= 2 ? "2" : viewParams().o.toString()} onChange={(e) => {
+                      setViewParams({...viewParams(), o: parseInt(e)})
+                      updatePattern(e)
+                      }}>
                       <For each={["OFF", "MIRROR", "RANDOM"]}>
-                        {(opt) => (
+                        {(opt, i) => (
                           <Col>
-                            <RadioGroupItem value={opt}>
+                            <RadioGroupItem value={(i()).toString()}>
                               <RadioGroupItemLabel>{opt}</RadioGroupItemLabel>
                             </RadioGroupItem>
                           </Col>
@@ -175,28 +322,48 @@ const View: Component = () => {
                       </For>
                     </RadioGroup>
                     <div id="random_pattern">
-                      <Input type="text" id="random_pattern_input" value="1234567" class="w-30 inline" />
-                      <button type="submit" id="random_pattern_auto_button" class="inline px-2"><i class="fa fa-refresh fa-lg" /></button>
+                      <Input type="text" id="random_pattern_input" value={randomP1()} class="w-30 inline" onChange={(e) => {
+                        setRandomP1(e.target.value)
+                        setViewParams({...viewParams(), o: 2})
+                        updatePattern("2")
+                        }} />
+                      <button type="submit" id="random_pattern_auto_button" class="inline px-2" onClick={() => {
+                        setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()))
+                        setViewParams({...viewParams(), o: 2})
+                        updatePattern("2")
+                      }}><i class="fa fa-refresh fa-lg" /></button>
                     </div>
                   </div>
+                  {keys() >= 10 ? (
                   <div class="space-y-3 pt-3">
                     <Label for="option_button_2p">Option 2P</Label>
-                    <RadioGroup id="option_button_2p">
+                    <RadioGroup id="option_button_2p" value={viewParams().o2 >= 2 ? "2" : viewParams().o2.toString()} onChange={(e) => {
+                      setViewParams({...viewParams(), o2: parseInt(e)})
+                      updatePatternP2(e)
+                      }}>
                       <For each={["OFF", "MIRROR", "RANDOM"]}>
-                        {(opt) => (
+                        {(opt, i) => (
                           <Col>
-                            <RadioGroupItem value={opt}>
+                            <RadioGroupItem value={(i()).toString()}>
                               <RadioGroupItemLabel>{opt}</RadioGroupItemLabel>
                             </RadioGroupItem>
                           </Col>
                         )}
                       </For>
                     </RadioGroup>
-                    <div id="random_pattern">
-                      <Input type="text" id="random_pattern_input" value="1234567" class="w-30 inline" />
-                      <button type="submit" id="random_pattern_auto_button" class="inline px-2"><i class="fa fa-refresh fa-lg" /></button>
+                    <div id="random_pattern_2p">
+                      <Input type="text" id="random_pattern_input_2p" value={randomP2()} class="w-30 inline" onChange={(e) => {
+                        setRandomP2(e.target.value)
+                        setViewParams({...viewParams(), o2: 2})
+                        updatePatternP2("2")
+                        }} />
+                      <button type="submit" id="random_pattern_auto_button_2p" class="inline px-2" onClick={() => {
+                        setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()))
+                        setViewParams({...viewParams(), o2: 2})
+                        updatePatternP2("2")
+                      }}><i class="fa fa-refresh fa-lg" /></button>
                     </div>
-                  </div>
+                  </div>) : <></>}
                   <div class="menu_box pt-3">
                     <Slider
                       minValue={0}
@@ -217,7 +384,7 @@ const View: Component = () => {
                   </div>
                   <div class="space-y-3 pt-3">
                     <Label for="color_button">Color</Label>
-                    <RadioGroup id="color_button">
+                    <RadioGroup id="color_button" defaultValue={viewParams().c.charAt(0).toUpperCase() + viewParams().c.slice(1)}>
                       <Grid cols={2} class="w-full gap-2">
                         <For each={["Default", "Mono"]}>
                           {(color) => (
