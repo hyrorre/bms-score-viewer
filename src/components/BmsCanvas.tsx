@@ -1173,7 +1173,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   });
 
   createEffect(() => {
-    if (props.data !== undefined && Object.keys(props.data).length !== 0) {
+    if (props.data !== undefined && props.data.score.length !== 0) {
       measureTo = props.data.score.length - 1
       pattern = props.data.pattern
       scaleH = props.params.h
