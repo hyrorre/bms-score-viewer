@@ -34,6 +34,7 @@ h3 {
     color: white;
     overflow: hidden;
     position: relative;
+    line-height: 1;
     height: 50px;
     margin-left: 15px;
     visibility: hidden;

@@ -111,21 +111,15 @@ const View: Component = () => {
     const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
     switch (e) {
       case "0":
-        //delete urlParam.o2
         setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(default_pattern) })
-        //setUrlParam()
         break
       case "1":
-        //urlParam.o2 = 1
         setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(validateKeyPattern(1, keys() / 2)[1]) })
-        //setUrlParam()
         break
       case "2":
         var result = validateKeyPattern(randomP2(), keys() >= 10 ? keys() / 2 : keys())
         if (result[0]) {
           setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(result[1]) })
-          //urlParam.o2 = result[2]
-          //setUrlParam()
         } else {
           setViewParams({ ...viewParams(), o2: 0 })
           updatePatternP2("0");
@@ -201,7 +195,7 @@ const View: Component = () => {
           <div id="header_bars">
             <span />
             <Sheet id="menu">
-              <SheetTrigger><p><i class="fa fa-cog fa-lg" /></p></SheetTrigger>
+              <SheetTrigger class="pr-1"><p><i class="fa fa-cog fa-lg" /></p></SheetTrigger>
               <SheetContent class="w-[300px] overflow-auto">
                 <SheetHeader>
                   <SheetTitle>Options</SheetTitle>
