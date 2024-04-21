@@ -41,6 +41,7 @@
     "file-saver": "^2.0.5",
     "patch-package": "^8.0.0",
     "pixi.js": "^7.4.2",
+    "solid-icons": "^1.1.0",
     "solid-js": "^1.8.11",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"

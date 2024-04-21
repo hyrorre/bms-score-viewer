@@ -83,10 +83,6 @@
     /*    border: solid 1px white;*/
 }
 
-a:hover .fa {
-    color: lightgray;
-}
-
 a:hover .fa-home {
     color: darkseagreen;
 }

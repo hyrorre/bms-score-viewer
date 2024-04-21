@@ -15,6 +15,7 @@ import BmsCanvas from '~/components/BmsCanvas.jsx';
 import LoadingOverlay from '~/components/LoadingOverlay.jsx';
 
 import styles from './View.module.css';
+import { FaBrandsTwitter, FaSolidArrowRotateRight, FaSolidCamera, FaSolidGear, FaSolidHouseChimney } from "solid-icons/fa";
 
 const keypatInit: any = {
   5: "12345",
@@ -185,7 +186,6 @@ const View: Component = () => {
     <MetaProvider>
       <Meta name="viewport" content="width=device-width,user-scalable=no" />
       <Meta name="robots" content="noindex" />
-      <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
       <Show when={loading()}>
         <LoadingOverlay />
       </Show>
@@ -200,7 +200,7 @@ const View: Component = () => {
           <div id={styles.header_bars}>
             <span />
             <Sheet id="menu">
-              <SheetTrigger class="pr-1"><p><i class={"fa fa-cog fa-lg " + styles.fa} /></p></SheetTrigger>
+              <SheetTrigger class="pr-1"><p><FaSolidGear size={"1.2em"} class="hover:animate-[spin_3s_linear_infinite]" /></p></SheetTrigger>
               <SheetContent class="w-[300px] overflow-auto">
                 <SheetHeader>
                   <SheetTitle>Options</SheetTitle>
@@ -211,13 +211,13 @@ const View: Component = () => {
                           <A id="link_to_lr2ir" href={"http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + queryParams.md5} target="_blank" class={buttonVariants({ variant: "default" })}>LR2IR</A>
                         </Col>
                         <Col>
-                          <A id="link_to_home" href="/" class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-home " + styles["fa-home"]} /></A>
+                          <A id="link_to_home" href="/" class={buttonVariants({ variant: "secondary" })}><FaSolidHouseChimney class={styles["fa-home"]} /></A>
                         </Col>
                         <Col>
-                          <A id="tweet_button" href={"https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data().title)} target="_blank" class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-twitter " + styles["fa-twitter"]} /></A>
+                          <A id="tweet_button" href={"https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data().title)} target="_blank" class={buttonVariants({ variant: "secondary" })}><FaBrandsTwitter class={styles["fa-twitter"]} /></A>
                         </Col>
                         <Col>
-                          <A id="save_ss_button" onClick={screenshot} href={location.href} class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-camera " + styles["fa-camera"]} /></A>
+                          <A id="save_ss_button" onClick={screenshot} href={location.href} class={buttonVariants({ variant: "secondary" })}><FaSolidCamera class={styles["fa-camera"]} /></A>
                         </Col>
                       </Grid>
                     </div>
@@ -335,7 +335,7 @@ const View: Component = () => {
                         setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()))
                         setViewParams({ ...viewParams(), o: 2 })
                         updatePattern("2")
-                      }}><i class="fa fa-refresh fa-lg" /></button>
+                      }}><FaSolidArrowRotateRight /></button>
                     </div>
                   </div>
                   {keys() >= 10 ? (
@@ -365,7 +365,7 @@ const View: Component = () => {
                           setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()))
                           setViewParams({ ...viewParams(), o2: 2 })
                           updatePatternP2("2")
-                        }}><i class="fa fa-refresh fa-lg" /></button>
+                        }}><FaSolidArrowRotateRight /></button>
                       </div>
                     </div>) : <></>}
                   <div class="menu_box pt-3">
