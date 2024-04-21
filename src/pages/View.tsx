@@ -2,8 +2,6 @@ import { For, Show, createSignal, onMount, type Component } from 'solid-js';
 import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
 import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
-import '../../public/js/jquery-3.7.1.min.js';
-import '../../public/plugin/holdon/HoldOn.min.js';
 import { openBMS, validateKeyPattern } from '../../public/js/main.js';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
@@ -84,7 +82,6 @@ const View: Component = () => {
 
   const updatePattern = (e: string, keyChange: boolean = false) => { // pattern is null for keys < 10 if nonran for optimization purposes
     const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
-    console.log(data().pattern)
     switch (e) {
       case "0":
         setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : (keyChange ? default_pattern : null) })
@@ -184,8 +181,6 @@ const View: Component = () => {
       <Meta name="viewport" content="width=device-width,user-scalable=no" />
       <Meta name="robots" content="noindex" />
       <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
-      <Link href={"../plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
-      {/*<Link href={"../css/main.css"} rel="stylesheet" />*/}
       <Show when={loading()}>
         <LoadingOverlay />
       </Show>

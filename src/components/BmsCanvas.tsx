@@ -994,7 +994,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         renderer.clearBeforeRender = true
       }
 
-      $("#content").append(renderer.view)
+      document.getElementById("content")!.append(renderer.view)
     } else {
       // window resize
       if (renderer != null) {
