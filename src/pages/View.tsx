@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from "~/components/ui
 import { Label } from '~/components/ui/label.jsx';
 import { Col, Grid } from '~/components/ui/grid.jsx';
 import { buttonVariants } from '~/components/ui/button.jsx';
-import { A, useSearchParams } from '@solidjs/router';
+import { A, useNavigate, useSearchParams } from '@solidjs/router';
 import { Input } from '~/components/ui/input.jsx';
 import BmsCanvas from '~/components/BmsCanvas.jsx';
 import LoadingOverlay from '~/components/LoadingOverlay.jsx';
@@ -22,32 +22,32 @@ const keypatInit: any = {
   9: "123456789",
   10: "12345",
   14: "1234567",
-}
+};
 
 const View: Component = () => {
   const shuffle = (arr: any[]) => {
-    var i, j, tmp, length
+    let i, j, tmp, length;
     for (length = arr.length, i = length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1))
-      tmp = arr[i]
-      arr[i] = arr[j]
-      arr[j] = tmp
+      j = Math.floor(Math.random() * (i + 1));
+      tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
     }
-    return arr
+    return arr;
   };
 
   const randomizeKeyPatternStr = (str: string, keys: number) => {
     if (keys == 10 || keys == 14) {
       // DP
-      var ar1 = str.split("")
-      var ar2 = ar1.splice(keys / 2, keys / 2)
-      ar1 = shuffle(ar1)
-      ar2 = shuffle(ar2)
-      return ar1.join("") + ar2.join("")
+      let ar1 = str.split("");
+      let ar2 = ar1.splice(keys / 2, keys / 2);
+      ar1 = shuffle(ar1);
+      ar2 = shuffle(ar2);
+      return ar1.join("") + ar2.join("");
     } else {
       // SP
-      var ar = shuffle(str.split(""))
-      return ar.join("")
+      let ar = shuffle(str.split(""));
+      return ar.join("");
     }
   };
 
@@ -61,7 +61,7 @@ const View: Component = () => {
     keys: 0,
     rank: "",
     score: [],
-    pattern: ""
+    pattern: [] as number[]
   });
   const [viewParams, setViewParams] = createSignal({
     w: 7, //scaleW
@@ -73,88 +73,93 @@ const View: Component = () => {
     f: 0, //from
     t: 0, //to
   });
-  const [randomP1, setRandomP1] = createSignal("")
-  const [randomP2, setRandomP2] = createSignal("")
-  const [loading, setLoading] = createSignal(false)
-  const [keys, setKeys] = createSignal(0)
+  const [randomP1, setRandomP1] = createSignal("");
+  const [randomP2, setRandomP2] = createSignal("");
+  const [loading, setLoading] = createSignal(false);
+  const [keys, setKeys] = createSignal(0);
+  const navigate = useNavigate();
 
   let bmsData = "";
 
   const updatePattern = (e: string, keyChange: boolean = false) => { // pattern is null for keys < 10 if nonran for optimization purposes
-    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
+    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1];
     switch (e) {
       case "0":
-        setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : (keyChange ? default_pattern : null) })
-        break
+        setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : (keyChange ? default_pattern : null!) });
+        break;
       case "1":
         setData({
           ...data(), pattern:
             keys() >= 10
               ? validateKeyPattern(1, keys() / 2)[1].concat(data().pattern.slice(keys() / 2))
               : validateKeyPattern(1, keys())[1]
-        })
-        break
+        });
+        break;
       case "2":
-        var result = validateKeyPattern(randomP1(), keys() >= 10 ? keys() / 2 : keys())
+        var result = validateKeyPattern(randomP1(), keys() >= 10 ? keys() / 2 : keys());
         if (result[0]) {
-          setData({ ...data(), pattern: keys() >= 10 ? result[1].concat(data().pattern.slice(keys() / 2)) : result[1] })
+          setData({ ...data(), pattern: keys() >= 10 ? result[1].concat(data().pattern.slice(keys() / 2)) : result[1] });
         } else {
-          setViewParams({ ...viewParams(), o: 0 })
+          setViewParams({ ...viewParams(), o: 0 });
           updatePattern("0");
-          return
+          return;
         }
     }
-    setQueryParams({o: (e === "0" ? "" : (e === "1" ? e : randomP1()))})
+    setQueryParams({o: (e === "0" ? "" : (e === "1" ? e : randomP1()))});
   };
 
   const updatePatternP2 = (e: string) => {
-    if (keys() < 10) return
-    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
+    if (keys() < 10) return;
+    const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1];
     switch (e) {
       case "0":
-        setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(default_pattern) })
-        break
+        setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(default_pattern) });
+        break;
       case "1":
-        setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(validateKeyPattern(1, keys() / 2)[1]) })
-        break
+        setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(validateKeyPattern(1, keys() / 2)[1]) });
+        break;
       case "2":
         var result = validateKeyPattern(randomP2(), keys() >= 10 ? keys() / 2 : keys())
         if (result[0]) {
-          setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(result[1]) })
+          setData({ ...data(), pattern: data().pattern.slice(0, keys() / 2).concat(result[1]) });
         } else {
-          setViewParams({ ...viewParams(), o2: 0 })
+          setViewParams({ ...viewParams(), o2: 0 });
           updatePatternP2("0");
-          return
+          return;
         }
     }
-    setQueryParams({o2: (e === "0" ? "" : (e === "1" ? e : randomP2()))})
+    setQueryParams({o2: (e === "0" ? "" : (e === "1" ? e : randomP2()))});
   };
 
   const screenshot = () => {
-    const canvas = document.getElementById("content")?.children[0] as HTMLCanvasElement
+    const canvas = document.getElementById("content")?.children[0] as HTMLCanvasElement;
     canvas.toBlob((blob) => {
-      saveAs(blob!, "score.png")
+      saveAs(blob!, "score.png");
     })
   }
 
   const load = () => {
-    let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams)
+    let [data, params, randP1, randP2] = openBMS(bmsData, keys(), queryParams);
+    if (data === null) {
+      navigate("/");
+      return;
+    }
 
     if (randP1)
-      setRandomP1(randP1)
+      setRandomP1(randP1);
     if (randP2)
-      setRandomP2(randP2)
+      setRandomP2(randP2);
     setData(data);
-    setKeys(data.keys)
+    setKeys(data.keys);
 
-    setViewParams({ ...viewParams(), ...params })
-    document.title = document.title + ' - ' + data.title
+    setViewParams({ ...viewParams(), ...params });
+    document.title = document.title + ' - ' + data.title;
   }
 
   onMount(async () => {
     setLoading(true);
     let response: Response;
-    response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`)
+    response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`);
     if (!response.ok) {
       alert("BMSファイルが開けませんでした");
       return;
@@ -167,7 +172,7 @@ const View: Component = () => {
       type: 'string'
     });
 
-    setKeys(dataJson["keys"])
+    setKeys(dataJson["keys"]);
     setRandomP1(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
     setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
 

@@ -6,10 +6,10 @@ const maxScaleW = 10;
 const minScaleH = 0.5;
 const maxScaleH = 3.5;
 
-export function validateKeyPattern(p, k) {
-  var isValid = false;
-  var ret = [];
-  var str = "";
+export function validateKeyPattern(p: string | number, k: number): [boolean, number[], string] {
+  let isValid = false;
+  let ret = [];
+  let str = "";
 
   if (p == 0) {
     str = String(p);
@@ -24,16 +24,16 @@ export function validateKeyPattern(p, k) {
     }
     isValid = true;
   } else {
-    var ar = p.split("");
+    var ar = (p as string).split("");
     if (ar.length == k) {
       ar = ar.filter(function (x, i, self) {
-        return self.indexOf(x) === i && x >= 1 && x <= k;
+        return self.indexOf(x) === i && parseInt(x) >= 1 && parseInt(x) <= k;
       });
       if (ar.length == k) {
         ret = [];
         str = "";
         for (var i = 0; i < k; i++) {
-          ret.push(ar[i] - 1);
+          ret.push(parseInt(ar[i]) - 1);
           str += ar[i];
         }
         isValid = true;
@@ -43,10 +43,10 @@ export function validateKeyPattern(p, k) {
   return [isValid, ret, str];
 }
 
-function start(tempParam, data) {
-  var keys = 7;
-  var urlParam = {};
-  var pattern = null;
+const start = (tempParam: any, data: any): [any, any, string, string] => {
+  let keys = 7;
+  let urlParam: any = {};
+  let pattern = null;
   // URLパラメータのセ�?��
   // - w: scale width
   if (
@@ -62,7 +62,7 @@ function start(tempParam, data) {
     tempParam.h >= minScaleH &&
     tempParam.h <= maxScaleH
   ) {
-    urlParam.h = parseInt(2 * tempParam.h) / 2;
+    urlParam.h = parseFloat(tempParam.h);
   }
   // - p: play side or flip
   if (tempParam.p != null && (tempParam.p == "1" || tempParam.p == "2")) {
@@ -145,9 +145,9 @@ function start(tempParam, data) {
 
   data.pattern = pattern;
   return [data, urlParam, randP1, randP2];
-}
+};
 
-const getJudgeRank = (r) => {
+const getJudgeRank = (r: string) => {
   switch (r) {
     case "0":
       return "VERY HARD";
@@ -164,10 +164,11 @@ const getJudgeRank = (r) => {
   }
 };
 
-export function openBMS(bmsSource, keys, tempParam) {
+export function openBMS(bmsSource: string, keys: number, tempParam: any): [any, any, string, string] {
   const compileResult = Compiler.compile(bmsSource);
   const chart = compileResult.chart;
 
+  //@ts-ignore: need to access private member
   const headers = chart.headers._data;
   let lntype = headers.lntype;
   const lnobj = headers.lnobj;
@@ -175,7 +176,8 @@ export function openBMS(bmsSource, keys, tempParam) {
 
   const objects = chart.objects.allSorted();
 
-  const timeSignatures = chart.timeSignatures._values;
+  //@ts-ignore: need to access private member
+  const timeSignatures = chart.timeSignatures._values as {[key: number]: number};
   let ribbitResponse = {
     artist:
       (headers.artist || "") +
@@ -184,7 +186,7 @@ export function openBMS(bmsSource, keys, tempParam) {
     bpm: headers.bpm,
     genre: headers.genre,
     keys: keys || 7,
-    lnmap: {},
+    lnmap: {} as {[key: string] : any},
     notes:
       objects.filter((x) => x.channel.match(/[12][1-9]/) && x.value !== lnobj)
         .length +
@@ -192,7 +194,7 @@ export function openBMS(bmsSource, keys, tempParam) {
         .length /
         2,
     score: [...Array(objects.slice(-1)[0].measure + 1).keys()].map(() => {
-      return { length: 72 };
+      return { length: 72 } as {[key: string] : any};
     }),
     title:
       (headers.title || "") +
@@ -204,13 +206,13 @@ export function openBMS(bmsSource, keys, tempParam) {
   };
 
   for (const [measure, timeSignature] of Object.entries(timeSignatures)) {
-    ribbitResponse.score[measure] = { length: timeSignature * 72 };
+    ribbitResponse.score[measure as unknown as number] = { length: timeSignature * 72 };
   }
 
   let previousObjects = [...Array(36 ** 2).keys()].reduce(
     (obj, i) => Object.assign(obj, { [i.toString(36)]: undefined }),
     {}
-  );
+  ) as {[key: string] : any};
 
   for (const object of objects) {
     let channel =
@@ -284,4 +286,5 @@ export function openBMS(bmsSource, keys, tempParam) {
   } else {
     location.reload();
   }
+  return [null, null, "", ""]
 }
