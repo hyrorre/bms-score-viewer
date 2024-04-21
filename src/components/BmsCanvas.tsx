@@ -11,7 +11,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   var renderer: PIXI.Renderer | null = null
   var base: PIXI.Container | null = null
   var stage: PIXI.Container | null  = null
-  var thumbnail: PIXI.Container | null  = null
+  var thumbnail: any | null  = null
   var measures: any[] = []
 
   // - レンダリングパラメータ
@@ -22,6 +22,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   var measureFrom = 0
   var measureTo = 0
   var colorScheme = "default"
+  PIXI.settings.ROUND_PIXELS = true
 
   // 定数
   var measureGridSize = {
@@ -30,14 +31,14 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     9: 22,
     10: 34,
     14: 42,
-  }
+  } as {[keys: number]: number}
   var measureLeftLaneSize = {
     5: measureGridSize[5] - 4,
     7: measureGridSize[7] - 4,
     9: measureGridSize[9] - 4,
     10: (measureGridSize[10] - 4) / 2,
     14: (measureGridSize[14] - 4) / 2,
-  }
+  } as {[keys: number]: number}
 
   var keyCh = {
     5: ["11", "12", "13", "14", "15"],
@@ -51,7 +52,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       ["11", "12", "13", "14", "15", "18", "19"],
       ["21", "22", "23", "24", "25", "28", "29"],
     ],
-  }
+  } as {[keys: number]: any}
+
   var schemes = {
     default: {
       backgroundFill: 0x000000,
@@ -114,13 +116,13 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       lnWidthRatio: 0.8,
       bpmLineH: 2,
     },
-  }
+  } as {[key: string]: {[key: string]: number | null}}
 
   // 小節オブジェク�?
   function Measure(param: any) {
     var lineWidth = 1
-    var container = new PIXI.Container()
-    var g = new PIXI.Graphics()
+    var container = new PIXI.Container() as any
+    var g = new PIXI.Graphics() as any
     container.addChild(g)
 
     // コン�?��サイズを決�?
@@ -183,7 +185,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     }
 
     // ノ�?ト�?��線DP
-    g.drawNoteLinesDP = function (keys) {
+    g.drawNoteLinesDP = function (keys: number) {
       // ノ�?ト�?��線を描画
       // SC:5, KEY:2, LABEL:2
       var grid = g.gridX
@@ -215,7 +217,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           fontFamily: "Arial",
           fontSize: grid * 2,
           fontWeight: "bold",
-          fill: schemes[colorScheme].labelText,
+          fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
         labelText.anchor.y = 0.5
@@ -236,7 +238,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       }
     }
     // ノ�?ト�?��線SP
-    g.drawNoteLinesSP = function (keys) {
+    g.drawNoteLinesSP = function (keys: number) {
       // ノ�?ト�?��線を描画
       // SC:5, KEY:2, LABEL:2
       var grid = g.gridX
@@ -269,7 +271,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           fontFamily: "Arial",
           fontSize: grid * 2,
           fontWeight: "bold",
-          fill: schemes[colorScheme].labelText,
+          fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
         labelText.anchor.y = 0.5
@@ -279,7 +281,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       }
     }
     // ノ�?ト�?��線PMS
-    g.drawNoteLinesPMS = function (keys) {
+    g.drawNoteLinesPMS = function (keys: number) {
       var idx = 0
       var grid = g.gridX
       var color = schemes[colorScheme].laneLine
@@ -306,7 +308,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           fontFamily: "Arial",
           fontSize: grid * 2,
           fontWeight: "bold",
-          fill: schemes[colorScheme].labelText,
+          fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
         labelText.anchor.y = 0.5
@@ -335,7 +337,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       }
     }
     // ノ�?�?DP
-    g.drawNotesDP = function (keys) {
+    g.drawNotesDP = function (keys: number) {
       // レーン入れ替�?
       var keych1P = keyCh[keys][0]
       var keych2P = keyCh[keys][1]
@@ -382,14 +384,14 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       // KEY
       ;[
         [5, keych1P],
-        [keys + 9, keych2P],
+        [keys + 9, keych2P as string[]],
       ].forEach(function (p) {
         var idx = p[0]
         var color = blue
         var colorLine = blueLine
         var lnColor = lnBlue
         var lnColorLine = lnWhiteLine
-        p[1].forEach(function (key) {
+        p[1].forEach(function (key: string) {
           if (color == blue) {
             color = white
             colorLine = whiteLine
@@ -406,7 +408,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           }
 
           if (key in g.lnmap) {
-            g.lnmap[key].forEach(function (area) {
+            g.lnmap[key].forEach(function (area: any) {
               if (area[0][0] <= g.index && area[1][0] >= g.index) {
                 var lnBegin = 0
                 var lnEnd = g.logicalLength
@@ -421,9 +423,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 g.beginFill(lnColor)
                 g.lineStyle(noteLineWidth, lnColorLine, noteLineAlpha)
                 g.drawRect(
-                  idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio * g.gridX) / 2,
+                  idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio! * g.gridX) / 2,
                   g.innerHeight - g.gridY * lnEnd - lineWidth + (lnEnd == g.logicalLength ? noteLineWidth : 0),
-                  2 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio * g.gridX,
+                  2 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio! * g.gridX,
                   g.gridY * (lnEnd - lnBegin) +
                     (lnBegin == 0 ? lineWidth : 0) -
                     lineWidth -
@@ -440,8 +442,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
             var _key = q[0]
             var _color = q[1]
             var _colorLine = q[2]
-            if (g.score && _key in g.score) {
-              g.score[_key].forEach(function (pos) {
+            if (g.score && _key! in g.score) {
+              g.score[_key!].forEach(function (pos: any) {
                 var noteLineWidth = _colorLine != null ? 1 : 0
                 var noteLineAlpha = _colorLine != null ? 1 : 0
                 g.beginFill(_color)
@@ -465,13 +467,13 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         [0, scch1P],
         [2 * keys + 9, scch2P],
       ].forEach(function (p) {
-        var idx = p[0]
+        var idx = p[0] as number
         var color = red
         var colorLine = red
         var lnColor = lnRed
         var lnColorLine = lnRedLine
         if (p[1] in g.lnmap) {
-          g.lnmap[p[1]].forEach(function (area) {
+          g.lnmap[p[1]].forEach(function (area: any) {
             if (area[0][0] <= g.index && area[1][0] >= g.index) {
               var lnBegin = 0
               var lnEnd = g.logicalLength
@@ -486,9 +488,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               g.beginFill(lnColor)
               g.lineStyle(noteLineWidth, lnColorLine, noteLineAlpha)
               g.drawRect(
-                idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio * g.gridX) / 2,
+                idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio! * g.gridX) / 2,
                 g.innerHeight - g.gridY * lnEnd - lineWidth + (lnEnd == g.logicalLength ? noteLineWidth : 0),
-                5 * g.gridX - lnRatio * g.gridX,
+                5 * g.gridX - lnRatio! * g.gridX,
                 g.gridY * (lnEnd - lnBegin) +
                   (lnBegin == 0 ? lineWidth : 0) -
                   lineWidth -
@@ -498,15 +500,15 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
             }
           })
         }
-        ;[
+        ;[ //@ts-ignore: p[1] is a string
           [(p[1].charAt(0) == "1" ? "D" : "E") + p[1].charAt(1), mineRed, mineRedLine],
           [p[1], color, colorLine],
         ].forEach(function (q) {
           var _key = q[0]
           var _color = q[1]
           var _colorLine = q[2]
-          if (g.score && _key in g.score) {
-            g.score[_key].forEach(function (pos) {
+          if (g.score && _key! in g.score) {
+            g.score[_key!].forEach(function (pos: any) {
               var noteLineWidth = _colorLine != null ? 1 : 0
               var noteLineAlpha = _colorLine != null ? 1 : 0
               g.beginFill(_color)
@@ -524,7 +526,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       })
     }
     // ノ�?�?SP
-    g.drawNotesSP = function (keys) {
+    g.drawNotesSP = function (keys: number) {
       // レーン入れ替�?
       var keych = keyCh[keys]
       if (g.pattern != null && g.pattern.length == keys) {
@@ -559,7 +561,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var colorLine = blueLine
       var lnColor = lnBlue
       var lnColorLine = lnBlueLine
-      keych.forEach(function (key) {
+      keych.forEach(function (key: any) {
         if (color == blue) {
           color = white
           colorLine = whiteLine
@@ -576,7 +578,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         }
 
         if (key in g.lnmap) {
-          g.lnmap[key].forEach(function (area) {
+          g.lnmap[key].forEach(function (area: any) {
             if (area[0][0] <= g.index && area[1][0] >= g.index) {
               var lnBegin = 0
               var lnEnd = g.logicalLength
@@ -591,9 +593,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               g.beginFill(lnColor)
               g.lineStyle(noteLineWidth, lnColorLine, noteLineAlpha)
               g.drawRect(
-                idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio * g.gridX) / 2,
+                idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio! * g.gridX) / 2,
                 g.innerHeight - g.gridY * lnEnd - lineWidth + (lnEnd == g.logicalLength ? noteLineWidth : 0),
-                2 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio * g.gridX,
+                2 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio! * g.gridX,
                 g.gridY * (lnEnd - lnBegin) +
                   (lnBegin == 0 ? lineWidth : 0) -
                   lineWidth -
@@ -611,7 +613,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           var _color = q[1]
           var _colorLine = q[2]
           if (g.score && _key in g.score) {
-            g.score[_key].forEach(function (pos) {
+            g.score[_key].forEach(function (pos: any) {
               var noteLineWidth = _colorLine != null ? 1 : 0
               var noteLineAlpha = _colorLine != null ? 1 : 0
               g.beginFill(_color)
@@ -636,7 +638,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       lnColor = lnRed
       lnColorLine = lnRedLine
       if ("16" in g.lnmap) {
-        g.lnmap["16"].forEach(function (area) {
+        g.lnmap["16"].forEach(function (area: any) {
           if (area[0][0] <= g.index && area[1][0] >= g.index) {
             var lnBegin = 0
             var lnEnd = g.logicalLength
@@ -651,9 +653,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
             g.beginFill(lnColor)
             g.lineStyle(noteLineWidth, lnColorLine, noteLineAlpha)
             g.drawRect(
-              idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio * g.gridX) / 2,
+              idx * g.gridX - (idx == 0 ? lineWidth : 0) + (lnRatio! * g.gridX) / 2,
               g.innerHeight - g.gridY * lnEnd - lineWidth + (lnEnd == g.logicalLength ? noteLineWidth : 0),
-              5 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio * g.gridX,
+              5 * g.gridX - (idx == 0 ? 0 : lineWidth) - lnRatio! * g.gridX,
               g.gridY * (lnEnd - lnBegin) +
                 (lnBegin == 0 ? lineWidth : 0) -
                 lineWidth -
@@ -670,8 +672,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         var _key = q[0]
         var _color = q[1]
         var _colorLine = q[2]
-        if (g.score && _key in g.score) {
-          g.score[_key].forEach(function (pos) {
+        if (g.score && _key! in g.score) {
+          g.score[_key!].forEach(function (pos: any) {
             var noteLineWidth = _colorLine != null ? 1 : 0
             var noteLineAlpha = _colorLine != null ? 1 : 0
             g.beginFill(_color)
@@ -688,7 +690,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       })
     }
     // ノ�?�?PMS
-    g.drawNotesPMS = function (keys) {
+    g.drawNotesPMS = function (keys: number) {
       // レーン入れ替�?
       var keych = keyCh[keys]
       if (g.pattern != null && g.pattern.length == keys) {
@@ -709,10 +711,10 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
 
       // KEY
       var idx = 0
-      keych.forEach(function (key, i) {
+      keych.forEach(function (key: string, i: number) {
         // LN
         if (key in g.lnmap) {
-          g.lnmap[key].forEach(function (area) {
+          g.lnmap[key].forEach(function (area: any) {
             if (area[0][0] <= g.index && area[1][0] >= g.index) {
               var lnBegin = 0
               var lnEnd = g.logicalLength
@@ -741,7 +743,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           var _key = q[0]
           var _color = q[1]
           if (g.score && _key in g.score) {
-            g.score[_key].forEach(function (pos) {
+            g.score[_key].forEach(function (pos: any) {
               // note
               g.beginFill(_color)
               g.lineStyle(0, null, 1)
@@ -781,18 +783,18 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var ch = ["03", "08"]
       ch.forEach(function (key) {
         if (g.score && key in g.score) {
-          g.score[key].forEach(function (pos) {
+          g.score[key].forEach(function (pos: any) {
             g.lineStyle(lineH, colorLine, 1)
-            g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH)
-            g.lineTo(g.gridX * measureLeftLaneSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH)
+            g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH!)
+            g.lineTo(g.gridX * measureLeftLaneSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
 
             if (g.keys == 10 || g.keys == 14) {
               // for DP
               g.moveTo(
                 g.gridX * (measureGridSize[g.keys] - measureLeftLaneSize[g.keys]),
-                g.innerHeight - g.gridY * pos[0] - lineH
+                g.innerHeight - g.gridY * pos[0] - lineH!
               )
-              g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH)
+              g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
             }
             if (colorText != null) {
               var labelText = new PIXI.Text(Math.round(pos[1] * 10) / 10, {
@@ -800,7 +802,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 fontSize: g.gridX * 1.5,
                 fontWeight: "bold",
                 fill: colorText,
-                stroke: colorStroke,
+                stroke: colorStroke!,
                 strokeThickness: colorStroke != null ? 2 : 0,
               })
               labelText.anchor.x = 0.5
@@ -824,18 +826,18 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var ch = ["09"]
       ch.forEach(function (key) {
         if (g.score && key in g.score) {
-          g.score[key].forEach(function (pos) {
+          g.score[key].forEach(function (pos: any) {
             g.lineStyle(lineH, colorLine, 1)
-            g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH)
-            g.lineTo(g.gridX * measureLeftLaneSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH)
+            g.moveTo(-1, g.innerHeight - g.gridY * pos[0] - lineH!)
+            g.lineTo(g.gridX * measureLeftLaneSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
 
             if (g.keys == 10 || g.keys == 14) {
               // for DP
               g.moveTo(
                 g.gridX * (measureGridSize[g.keys] - measureLeftLaneSize[g.keys]),
-                g.innerHeight - g.gridY * pos[0] - lineH
+                g.innerHeight - g.gridY * pos[0] - lineH!
               )
-              g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH)
+              g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
             }
 
             if (colorText != null) {
@@ -844,7 +846,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 fontSize: g.gridX * 1.75,
                 fontWeight: "bold",
                 fill: colorText,
-                stroke: colorStroke,
+                stroke: colorStroke!,
                 strokeThickness: colorStroke != null ? 2 : 0,
               })
               labelText.anchor.x = 0.5
@@ -871,32 +873,31 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   // サ�?ネイルオブジェク�?
   function Thumbnail() {
     var lineWidth = 1
-    var container = new PIXI.Container()
+    var container = new PIXI.Container() as any
 
     // サ�?ネイル�?を作�?
     var g = new PIXI.Graphics()
     g.beginFill(0x0)
     g.lineStyle(lineWidth, 0x404040, 1)
     g.moveTo(0, 0)
-    g.lineTo(renderer.width + lineWidth, 0)
-    g.lineTo(renderer.width + lineWidth, thumbnailHeight)
+    g.lineTo(renderer!.width + lineWidth, 0)
+    g.lineTo(renderer!.width + lineWidth, thumbnailHeight)
     g.lineTo(0, thumbnailHeight)
     g.lineTo(0, 0)
     g.endFill()
     container.addChild(g)
 
     // サ�?ネイル作�?
-    container.widthShrinkRatio = renderer.width / stage.width
-    container.heightShrinkRatio = thumbnailHeight / stage.height
-    var texture = renderer.generateTexture(stage, {
+    container.widthShrinkRatio = renderer!.width / stage!.width
+    container.heightShrinkRatio = thumbnailHeight / stage!.height
+    var texture = renderer!.generateTexture(stage!, {
       scaleMode: PIXI.SCALE_MODES.NEAREST,
       resolution: 2 * container.widthShrinkRatio
     })
     container.thumbnail = new PIXI.Sprite(texture)
-    container.thumbnail.width = renderer.width /*- leftMargin - rightMargin*/
+    container.thumbnail.width = renderer!.width /*- leftMargin - rightMargin*/
     container.thumbnail.height = thumbnailHeight
-    // CANVAS では�?��くスプライトが作�?できな�?���?で無表示に
-    if (renderer.type != PIXI.RENDERER_TYPE.CANVAS) container.addChild(container.thumbnail)
+    container.addChild(container.thumbnail)
 
     // 表示中領域の白�?を作�?
     container.drawViewBox = function () {
@@ -909,23 +910,23 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         grayMask.beginFill(0xffffff)
         grayMask.lineStyle(lineWidth, 0x404040, 1)
         grayMask.moveTo(0, 0)
-        grayMask.lineTo(-renderer.width, 0)
-        grayMask.lineTo(-renderer.width, thumbnailHeight)
+        grayMask.lineTo(-renderer!.width, 0)
+        grayMask.lineTo(-renderer!.width, thumbnailHeight)
         grayMask.lineTo(0, thumbnailHeight)
         grayMask.lineTo(0, 0)
         // 右
-        grayMask.moveTo(renderer.width * container.widthShrinkRatio, 0)
-        grayMask.lineTo(renderer.width, 0)
-        grayMask.lineTo(renderer.width, thumbnailHeight)
-        grayMask.lineTo(renderer.width * container.widthShrinkRatio, thumbnailHeight)
-        grayMask.lineTo(renderer.width * container.widthShrinkRatio, 0)
+        grayMask.moveTo(renderer!.width * container.widthShrinkRatio, 0)
+        grayMask.lineTo(renderer!.width, 0)
+        grayMask.lineTo(renderer!.width, thumbnailHeight)
+        grayMask.lineTo(renderer!.width * container.widthShrinkRatio, thumbnailHeight)
+        grayMask.lineTo(renderer!.width * container.widthShrinkRatio, 0)
         grayMask.endFill()
         // アルファ
         grayMask.alpha = 0.4
         // クリ�?��可能にする
         grayMask.cursor = 'pointer'
         grayMask.eventMode = 'static'
-        grayMask.hitArea = new PIXI.Rectangle(-renderer.width, 0, 2 * renderer.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
+        grayMask.hitArea = new PIXI.Rectangle(-renderer!.width, 0, 2 * renderer!.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
         grayMask.on("mousedown", onClick).on("touchstart", onClick)
 
         container.viewBox.addChild(grayMask)
@@ -934,8 +935,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         frame.lineStyle(lineWidth, 0xffffff, 1)
         //�?の描画
         frame.moveTo(lineWidth, 0)
-        frame.lineTo(renderer.width * container.widthShrinkRatio, 0)
-        frame.lineTo(renderer.width * container.widthShrinkRatio, thumbnailHeight)
+        frame.lineTo(renderer!.width * container.widthShrinkRatio, 0)
+        frame.lineTo(renderer!.width * container.widthShrinkRatio, thumbnailHeight)
         frame.lineTo(lineWidth, thumbnailHeight)
         frame.lineTo(lineWidth, 0)
         // ドラ�?��可能にする
@@ -944,7 +945,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         frame.hitArea = new PIXI.Rectangle(
           lineWidth,
           0,
-          renderer.width * container.widthShrinkRatio - lineWidth,
+          renderer!.width * container.widthShrinkRatio - lineWidth,
           thumbnailHeight + 50
         ) // +50: はみ出しクリ�?��可能領域
         frame
@@ -960,7 +961,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
 
         container.addChild(container.viewBox)
       }
-      container.viewBox.position.x = (-leftMargin - stage.position.x) * container.widthShrinkRatio
+      container.viewBox.position.x = (-leftMargin - stage!.position.x) * container.widthShrinkRatio
       container.viewBox.position.y = 0
     }
     container.drawViewBox()
@@ -983,18 +984,12 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       renderer = PIXI.autoDetectRenderer({
         width: window.innerWidth,
         height: window.innerHeight - headerHeight, 
-        backgroundColor: schemes[colorScheme].backgroundFill,
+        backgroundColor: schemes[colorScheme].backgroundFill!,
         clearBeforeRender: true, // Before: schemes[colorScheme].backgroundFill != 0x000000
         preserveDrawingBuffer: true
-      })
-      // for performance optimization
-      renderer.roundPixels = true
-      if (renderer.type == PIXI.RENDERER_TYPE.CANVAS) {
-        // CANVAS では透�?オブジェクト�?描画がおかしくなる�?で�?��戻�?
-        renderer.clearBeforeRender = true
-      }
+      }) as PIXI.Renderer
 
-      document.getElementById("content")!.append(renderer.view)
+      document.getElementById("content")!.append(renderer.view as HTMLCanvasElement)
     } else {
       // window resize
       if (renderer != null) {
@@ -1009,7 +1004,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       stage = new PIXI.Container()
     }
     var posXinit = leftMargin
-    var posYinit = renderer.height - thumbnailHeight - bottomMargin
+    var posYinit = renderer!.height - thumbnailHeight - bottomMargin
     var posX = posXinit
     var posY = posYinit
     for (var i = 0; i < props.data.score.length; i++) {
@@ -1067,10 +1062,10 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     stage.position.y = 0
 
     // サ�?ネイルオブジェクトを作�?
-    thumbnail = Thumbnail()
+    thumbnail = Thumbnail() as any
 
-    thumbnail.position.x = 0
-    thumbnail.position.y = posYinit + bottomMargin
+    thumbnail!.position.x = 0
+    thumbnail!.position.y = posYinit + bottomMargin
 
     // 不要なレンダリングを無効�?
     //for (var i = 0; i < stage.children.length; i++) {
@@ -1081,15 +1076,15 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     // コン�?��に追�?とレンダリング
     base = new PIXI.Container()
     base.addChild(stage)
-    base.addChild(thumbnail)
-    renderer.render(base)
+    base.addChild(thumbnail!)
+    renderer!.render(base)
 
     // close loading spinner
     //HoldOn.close()
   }
 
   var refresh = function () {
-    renderer.render(base)
+    renderer!.render(base!)
   }
 
   var updateRender = function () {
@@ -1097,15 +1092,13 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     render()
   }
 
-  var dragStartPos = null
-  var startPos = null
-  var curPosition = null
+  var curPosition: any = null
 
-  function onDragStart(event) {
+  function onDragStart(this: any, event: PIXI.FederatedEvent) {
     // store a reference to the props.data
     // the reason for this is because of multitouch
     // we want to track the movement of this particular touch
-    this.data = event.data
+    this.data = event
     this.dragging = true
     if (this.parent.parent == thumbnail) {
       curPosition = this.data.getLocalPosition(thumbnail)
@@ -1114,7 +1107,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     }
   }
 
-  function onDragEnd() {
+  function onDragEnd(this: any) {
     this.dragging = false
 
     // set the interaction props.data to null
@@ -1122,43 +1115,43 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     curPosition = null
   }
 
-  function onDragMove() {
+  function onDragMove(this: any) {
     if (this.dragging && curPosition != null) {
       var newPosition
       var deltaX
       if (this.parent.parent == thumbnail) {
         newPosition = this.data.getLocalPosition(thumbnail)
         deltaX = -curPosition.x + newPosition.x
-        deltaX /= -thumbnail.widthShrinkRatio
+        deltaX /= -thumbnail!.widthShrinkRatio
       } else {
         newPosition = this.data.getLocalPosition(this.parent)
         deltaX = -curPosition.x + newPosition.x
       }
-      stage.position.x = Math.min(
-        Math.max(stage.position.x + deltaX, renderer.width - stage.width - leftMargin - rightMargin),
+      stage!.position.x = Math.min(
+        Math.max(stage!.position.x + deltaX, renderer!.width - stage!.width - leftMargin - rightMargin),
         0
       )
-      thumbnail.drawViewBox()
+      thumbnail!.drawViewBox()
       requestAnimationFrame(refresh)
       curPosition = newPosition
     }
   }
 
-  function onClick(event) {
-    this.data = event.props.data
+  function onClick(this: any, event: PIXI.FederatedEvent) {
+    this.data = event
     if (this.parent.parent == thumbnail) {
       curPosition = this.data.getLocalPosition(thumbnail)
-      var posX = curPosition.x - (renderer.width * thumbnail.widthShrinkRatio) / 2
-      stage.position.x = Math.min(
-        Math.max(-posX / thumbnail.widthShrinkRatio, renderer.width - stage.width - leftMargin - rightMargin),
+      var posX = curPosition.x - (renderer!.width * thumbnail.widthShrinkRatio) / 2
+      stage!.position.x = Math.min(
+        Math.max(-posX / thumbnail.widthShrinkRatio, renderer!.width - stage!.width - leftMargin - rightMargin),
         0
       )
-      thumbnail.drawViewBox()
+      thumbnail!.drawViewBox()
       requestAnimationFrame(refresh)
     }
   }
 
-  var resizeTimeout = false
+  var resizeTimeout = -1
 
   onMount(() => {
     window.addEventListener('resize', () => {
@@ -1167,8 +1160,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         (window.innerHeight - headerHeight == renderer.height && window.innerWidth == renderer.width)
       )
         return
-      if (resizeTimeout !== false) clearTimeout(resizeTimeout)
-      resizeTimeout = setTimeout(render, 200)
+      if (resizeTimeout !== -1) clearTimeout(resizeTimeout)
+      resizeTimeout = window.setTimeout(render, 200)
     });
   });
 
