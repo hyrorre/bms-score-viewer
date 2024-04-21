@@ -1,32 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,700,700italic);
-body {
+.body {
     margin: 0;
     padding: 0;
     overflow: hidden;
     background: #000;
     font-size: 13pt;
     font-family: Avenir, "Open Sans", "Helvetica Neue", Helvetica, Arial, Verdana, Roboto, "游ゴシック", "Yu Gothic", "游ゴシック体", "YuGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "Meiryo UI", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif !important;
-}
-
-h3 {
-    font-size: 20%;
-}
-
-:focus {
-    outline: none;
-}
-
-::-moz-focus-inner {
-    border: 0;
-}
-
-.icr-label.focused .icr-item:after {
-    border: 0 !important;
-}
-
-#holdon-overlay {
-    opacity: 1 !important;
-    background-color: transparent!important;
+    height: 100vh;
 }
 
 #header {
@@ -115,6 +95,6 @@ a:hover .fa-twitter {
     color: deepskyblue;
 }
 
-a:hover .fa-camera-retro {
+a:hover .fa-camera {
     color: darkorange;
 }

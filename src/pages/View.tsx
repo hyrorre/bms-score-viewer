@@ -14,7 +14,7 @@ import { Input } from '~/components/ui/input.jsx';
 import BmsCanvas from '~/components/BmsCanvas.jsx';
 import LoadingOverlay from '~/components/LoadingOverlay.jsx';
 
-import './view.css';
+import styles from './View.module.css';
 
 const keypatInit: any = {
   5: "12345",
@@ -178,7 +178,7 @@ const View: Component = () => {
 
     load()
     setLoading(false);
-    document.getElementById("header")!.style.visibility = "visible";
+    document.getElementById(styles.header)!.style.visibility = "visible";
   });
 
   return (
@@ -189,18 +189,18 @@ const View: Component = () => {
       <Show when={loading()}>
         <LoadingOverlay />
       </Show>
-      <div>
-        <div id="header">
-          <div id="header_info">
-            <span class="title_texts"><span id="title">{data().title}</span> / {data().artist} </span>
-            <span id="title_misc">
+      <div class={styles.body}>
+        <div id={styles.header}>
+          <div id={styles.header_info}>
+            <span class={styles.title_texts}><span id={styles.title}>{data().title}</span> / {data().artist} </span>
+            <span id={styles.title_misc}>
               - bpm: {data().bpm} / Notes: {data().notes} / Total: {data().total} / Rank: {data().rank}
             </span>
           </div>
-          <div id="header_bars">
+          <div id={styles.header_bars}>
             <span />
             <Sheet id="menu">
-              <SheetTrigger class="pr-1"><p><i class="fa fa-cog fa-lg" /></p></SheetTrigger>
+              <SheetTrigger class="pr-1"><p><i class={"fa fa-cog fa-lg " + styles.fa} /></p></SheetTrigger>
               <SheetContent class="w-[300px] overflow-auto">
                 <SheetHeader>
                   <SheetTitle>Options</SheetTitle>
@@ -211,13 +211,13 @@ const View: Component = () => {
                           <A id="link_to_lr2ir" href={"http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=" + queryParams.md5} target="_blank" class={buttonVariants({ variant: "default" })}>LR2IR</A>
                         </Col>
                         <Col>
-                          <A id="link_to_home" href="/" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-home" /></A>
+                          <A id="link_to_home" href="/" class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-home " + styles["fa-home"]} /></A>
                         </Col>
                         <Col>
-                          <A id="tweet_button" href={"https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data().title)} target="_blank" class={buttonVariants({ variant: "secondary" })}><i class="fa fa-twitter" /></A>
+                          <A id="tweet_button" href={"https://twitter.com/share?url=" + encodeURIComponent(location.href) + "&text=" + encodeURI(data().title)} target="_blank" class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-twitter " + styles["fa-twitter"]} /></A>
                         </Col>
                         <Col>
-                          <A id="save_ss_button" onClick={screenshot} href={location.href} class={buttonVariants({ variant: "secondary" })}><i class="fa fa-camera" /></A>
+                          <A id="save_ss_button" onClick={screenshot} href={location.href} class={buttonVariants({ variant: "secondary" })}><i class={"fa fa-camera " + styles["fa-camera"]} /></A>
                         </Col>
                       </Grid>
                     </div>
