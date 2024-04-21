@@ -2,7 +2,7 @@ import { For, Show, createSignal, onMount, type Component } from 'solid-js';
 import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
 import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
-import { openBMS, validateKeyPattern } from '../../public/js/main.js';
+import { openBMS, validateKeyPattern } from '../lib/bms.js';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
 import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from "~/components/ui/radio-group";
@@ -14,7 +14,7 @@ import { Input } from '~/components/ui/input.jsx';
 import BmsCanvas from '~/components/BmsCanvas.jsx';
 import LoadingOverlay from '~/components/LoadingOverlay.jsx';
 
-import '../../public/css/main.css'
+import './view.css';
 
 const keypatInit: any = {
   5: "12345",
