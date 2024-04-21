@@ -440,7 +440,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
             var _key = q[0]
             var _color = q[1]
             var _colorLine = q[2]
-            if (_key in g.score) {
+            if (g.score && _key in g.score) {
               g.score[_key].forEach(function (pos) {
                 var noteLineWidth = _colorLine != null ? 1 : 0
                 var noteLineAlpha = _colorLine != null ? 1 : 0
@@ -505,7 +505,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           var _key = q[0]
           var _color = q[1]
           var _colorLine = q[2]
-          if (_key in g.score) {
+          if (g.score && _key in g.score) {
             g.score[_key].forEach(function (pos) {
               var noteLineWidth = _colorLine != null ? 1 : 0
               var noteLineAlpha = _colorLine != null ? 1 : 0
@@ -740,7 +740,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         ].forEach(function (q) {
           var _key = q[0]
           var _color = q[1]
-          if (_key in g.score) {
+          if (g.score && _key in g.score) {
             g.score[_key].forEach(function (pos) {
               // note
               g.beginFill(_color)

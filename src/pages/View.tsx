@@ -1,5 +1,5 @@
 import { For, Show, createSignal, onMount, type Component } from 'solid-js';
-import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
+import { Meta, MetaProvider, Link } from '@solidjs/meta';
 import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
 import { openBMS, validateKeyPattern } from '../lib/bms.js';
