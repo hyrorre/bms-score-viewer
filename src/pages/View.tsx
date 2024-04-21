@@ -1,4 +1,4 @@
-import { For, createSignal, onMount, type Component } from 'solid-js';
+import { For, Show, createSignal, onMount, type Component } from 'solid-js';
 import { Meta, MetaProvider, Title, Link } from '@solidjs/meta';
 import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
@@ -14,6 +14,9 @@ import { buttonVariants } from '~/components/ui/button.jsx';
 import { A, useSearchParams } from '@solidjs/router';
 import { Input } from '~/components/ui/input.jsx';
 import BmsCanvas from '~/components/BmsCanvas.jsx';
+import LoadingOverlay from '~/components/LoadingOverlay.jsx';
+
+import '../../public/css/main.css'
 
 const keypatInit: any = {
   5: "12345",
@@ -74,15 +77,17 @@ const View: Component = () => {
   });
   const [randomP1, setRandomP1] = createSignal("")
   const [randomP2, setRandomP2] = createSignal("")
+  const [loading, setLoading] = createSignal(false)
   const [keys, setKeys] = createSignal(0)
 
   let bmsData = "";
 
-  const updatePattern = (e: string) => {
+  const updatePattern = (e: string, keyChange: boolean = false) => { // pattern is null for keys < 10 if nonran for optimization purposes
     const default_pattern = validateKeyPattern(0, keys() >= 10 ? keys() / 2 : keys())[1]
+    console.log(data().pattern)
     switch (e) {
       case "0":
-        setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : null })
+        setData({ ...data(), pattern: keys() >= 10 ? default_pattern.concat(data().pattern.slice(keys() / 2)) : (keyChange ? default_pattern : null) })
         break
       case "1":
         setData({
@@ -150,7 +155,7 @@ const View: Component = () => {
   }
 
   onMount(async () => {
-    HoldOn.open();
+    setLoading(true);
     let response: Response;
     response = await fetch(`${import.meta.env.VITE_API_URL}/bms/score/get?md5=${queryParams.md5}`)
     if (!response.ok) {
@@ -170,15 +175,20 @@ const View: Component = () => {
     setRandomP2(randomizeKeyPatternStr(keypatInit[keys()], keys() >= 10 ? keys() / 2 : keys()));
 
     load()
+    setLoading(false);
     document.getElementById("header")!.style.visibility = "visible";
   });
 
   return (
     <MetaProvider>
+      <Meta name="viewport" content="width=device-width,user-scalable=no" />
       <Meta name="robots" content="noindex" />
       <Link href={"../plugin/font-awesome/css/font-awesome.css"} rel="stylesheet" />
       <Link href={"../plugin/holdon/HoldOn.min.css"} rel="stylesheet" />
-      <Link href={"../css/main.css"} rel="stylesheet" />
+      {/*<Link href={"../css/main.css"} rel="stylesheet" />*/}
+      <Show when={loading()}>
+        <LoadingOverlay />
+      </Show>
       <div>
         <div id="header">
           <div id="header_info">
@@ -262,7 +272,7 @@ const View: Component = () => {
                     <RadioGroup id="keys_button" defaultValue={keys().toString() || "7"} onChange={(e) => {
                       setKeys(parseInt(e))
                       setData({...data(), keys: parseInt(e)})
-                      updatePattern(viewParams().o.toString())
+                      updatePattern(viewParams().o.toString(), true)
                       updatePatternP2(viewParams().o2.toString())
                       setQueryParams({k: e})
                     }}>

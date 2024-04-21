@@ -282,7 +282,6 @@ export function openBMS(bmsSource, keys, tempParam) {
       return start(tempParam, data);
     }
   } else {
-    HoldOn.close();
     location.reload();
   }
 }

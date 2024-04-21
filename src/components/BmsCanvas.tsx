@@ -969,7 +969,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
 
   function render() {
     // show loading spinner
-    HoldOn.open()
+    //HoldOn.open()
 
     thumbnailHeight = Math.max(window.innerHeight * 0.05, 25)
     //     headerHeight = $("#header").height();
@@ -1085,7 +1085,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     renderer.render(base)
 
     // close loading spinner
-    HoldOn.close()
+    //HoldOn.close()
   }
 
   var refresh = function () {
