@@ -3,7 +3,7 @@ import { Meta, MetaProvider, Link } from '@solidjs/meta';
 import { saveAs } from 'file-saver';
 import Encoding from 'encoding-japanese';
 import { openBMS, validateKeyPattern } from '../lib/bms.js';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet.jsx';
 import { Slider, SliderFill, SliderLabel, SliderThumb, SliderTrack, SliderValueLabel } from "~/components/ui/slider";
 import { RadioGroup, RadioGroupItem, RadioGroupItemLabel } from "~/components/ui/radio-group";
 import { Label } from '~/components/ui/label.jsx';
@@ -15,6 +15,7 @@ import BmsCanvas from '~/components/BmsCanvas.jsx';
 import LoadingOverlay from '~/components/LoadingOverlay.jsx';
 
 import styles from './View.module.css';
+import GitHubLogo from '../assets/github-mark.svg'
 import { FaBrandsTwitter, FaSolidArrowRotateRight, FaSolidCamera, FaSolidGear, FaSolidHouseChimney } from "solid-icons/fa";
 
 const keypatInit: any = {
@@ -415,18 +416,16 @@ const View: Component = () => {
                     </div>
                     <div class="text-sm text-muted-foreground">
                       <p>
-                        このアプリケーションは<a href="https://github.com/rib2bit">@rib2bit</a>様の<a href="http://ribbit.xyz/bms/score/">BMS Score Viewer</a>の非公認ミラーサイトです。本家のサービスが復旧するまでの間のみ一時的に公開します。
+                        このアプリケーションは<a href="https://github.com/rib2bit">@rib2bit</a>様の<a href="http://ribbit.xyz/bms/score/">BMS Score Viewer</a>の非公認ミラーサイトです。
                       </p>
                       <p>静的サイトとしての公開に伴うソースコードの改変部分について一切の著作者人格権を行使しません。</p><br />
-                      <p>
-                        GitHub: <a href="https://github.com/SayakaIsBaka/bms-score-viewer">SayakaIsBaka/bms-score-viewer</a>
-                      </p>
-                      <p>
-                        Original mirror by <a href="https://github.com/ladymade-star/bms-score-viewer">ladymade-star</a>
-                      </p>
                     </div>
                   </div>
                 </div>
+                <SheetFooter class="text-xs text-muted-foreground mt-3">
+                  <div class="text-center mt-1"><a href="https://github.com/SayakaIsBaka/bms-score-viewer"><img class="inline" src={GitHubLogo} style={{ height: '1rem', width: '1rem' }}/> SayakaIsBaka/bms-score-viewer</a></div>
+                  <div class="text-center italic">Based on <a href="https://github.com/ladymade-star/bms-score-viewer">ladymade-star's mirror</a></div>
+                </SheetFooter>
               </SheetContent>
             </Sheet>
           </div>
