@@ -249,7 +249,7 @@ const View: Component = () => {
                   <div class="menu_box">
                     <Slider
                       minValue={0.5}
-                      maxValue={3.5}
+                      maxValue={5}
                       defaultValue={[viewParams().h]}
                       onChangeEnd={(e) => {
                         setViewParams({ ...viewParams(), h: e[0] })
