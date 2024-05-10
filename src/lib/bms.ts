@@ -4,7 +4,7 @@ import { Compiler } from "bms";
 const minScaleW = 4;
 const maxScaleW = 10;
 const minScaleH = 0.5;
-const maxScaleH = 3.5;
+const maxScaleH = 5;
 
 export function validateKeyPattern(p: string | number, k: number): [boolean, number[], string] {
   let isValid = false;
