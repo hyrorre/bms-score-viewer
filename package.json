@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
+    "trace": "set VITE_CJS_TRACE=true && vite",
     "build": "vite build",
     "serve": "vite preview",
     "postinstall": "patch-package",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/encoding-japanese": "^2.0.5",
     "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.15.30",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "prettier": "^3.5.3",
