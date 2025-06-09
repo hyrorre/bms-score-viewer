@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
-import solidPlugin from 'vite-plugin-solid';
-import path from "path";
+import solidPlugin from 'vite-plugin-solid'
+import path from 'path'
 // import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
@@ -12,7 +12,7 @@ export default defineConfig({
     */
     // devtools(),
     solidPlugin(),
-    nodePolyfills()
+    nodePolyfills(),
   ],
   server: {
     port: 3000,
@@ -22,7 +22,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "~": path.resolve(__dirname, "./src")
-    }
+      '~': path.resolve(__dirname, './src'),
+    },
   },
-});
+})

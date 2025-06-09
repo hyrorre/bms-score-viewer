@@ -1,8 +1,8 @@
-import { createEffect, onMount, type Component } from 'solid-js';
-import * as PIXI from 'pixi.js';
+import { createEffect, onMount, type Component } from 'solid-js'
+import * as PIXI from 'pixi.js'
 
-const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
-      // グローバル変数
+const BmsCanvas: Component<{ data: any; params: any }> = (props) => {
+  // グローバル変数
   var leftMargin = 20
   var rightMargin = leftMargin
   var bottomMargin = 10
@@ -10,8 +10,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   var thumbnailHeight = 50
   var renderer: PIXI.Renderer | null = null
   var base: PIXI.Container | null = null
-  var stage: PIXI.Container | null  = null
-  var thumbnail: any | null  = null
+  var stage: PIXI.Container | null = null
+  var thumbnail: any | null = null
   var measures: any[] = []
 
   // - レンダリングパラメータ
@@ -21,7 +21,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
   var pattern: any = null
   var measureFrom = 0
   var measureTo = 0
-  var colorScheme = "default"
+  var colorScheme = 'default'
   PIXI.settings.ROUND_PIXELS = true
 
   // 定数
@@ -31,28 +31,28 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     9: 22,
     10: 34,
     14: 42,
-  } as {[keys: number]: number}
+  } as { [keys: number]: number }
   var measureLeftLaneSize = {
     5: measureGridSize[5] - 4,
     7: measureGridSize[7] - 4,
     9: measureGridSize[9] - 4,
     10: (measureGridSize[10] - 4) / 2,
     14: (measureGridSize[14] - 4) / 2,
-  } as {[keys: number]: number}
+  } as { [keys: number]: number }
 
   var keyCh = {
-    5: ["11", "12", "13", "14", "15"],
-    7: ["11", "12", "13", "14", "15", "18", "19"],
-    9: ["11", "12", "13", "14", "15", "22", "23", "24", "25"],
+    5: ['11', '12', '13', '14', '15'],
+    7: ['11', '12', '13', '14', '15', '18', '19'],
+    9: ['11', '12', '13', '14', '15', '22', '23', '24', '25'],
     10: [
-      ["11", "12", "13", "14", "15"],
-      ["21", "22", "23", "24", "25"],
+      ['11', '12', '13', '14', '15'],
+      ['21', '22', '23', '24', '25'],
     ],
     14: [
-      ["11", "12", "13", "14", "15", "18", "19"],
-      ["21", "22", "23", "24", "25", "28", "29"],
+      ['11', '12', '13', '14', '15', '18', '19'],
+      ['21', '22', '23', '24', '25', '28', '29'],
     ],
-  } as {[keys: number]: any}
+  } as { [keys: number]: any }
 
   var schemes = {
     default: {
@@ -116,7 +116,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       lnWidthRatio: 0.8,
       bpmLineH: 2,
     },
-  } as {[key: string]: {[key: string]: number | null}}
+  } as { [key: string]: { [key: string]: number | null } }
 
   // 小節オブジェク�?
   function Measure(param: any) {
@@ -214,9 +214,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
         var labelText = new PIXI.Text(g.index, {
-          fontFamily: "Arial",
+          fontFamily: 'Arial',
           fontSize: grid * 2,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
@@ -268,9 +268,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
         var labelText = new PIXI.Text(g.index, {
-          fontFamily: "Arial",
+          fontFamily: 'Arial',
           fontSize: grid * 2,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
@@ -305,9 +305,9 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       if (g.logicalLength >= g.unitLength / 4 / param.scaleH) {
         idx += 2
         var labelText = new PIXI.Text(g.index, {
-          fontFamily: "Arial",
+          fontFamily: 'Arial',
           fontSize: grid * 2,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           fill: schemes[colorScheme].labelText!,
         })
         labelText.anchor.x = 0.5
@@ -341,8 +341,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       // レーン入れ替�?
       var keych1P = keyCh[keys][0]
       var keych2P = keyCh[keys][1]
-      var scch1P = "16"
-      var scch2P = "26"
+      var scch1P = '16'
+      var scch2P = '26'
       if (g.side == 2) {
         // FLIP
         var temp = keych1P
@@ -429,14 +429,14 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                   g.gridY * (lnEnd - lnBegin) +
                     (lnBegin == 0 ? lineWidth : 0) -
                     lineWidth -
-                    (lnEnd == g.logicalLength ? noteLineWidth : 0)
+                    (lnEnd == g.logicalLength ? noteLineWidth : 0),
                 )
                 g.endFill()
               }
             })
           }
           ;[
-            [(key.charAt(0) == "1" ? "D" : "E") + key.charAt(1), mineRed, mineRedLine],
+            [(key.charAt(0) == '1' ? 'D' : 'E') + key.charAt(1), mineRed, mineRedLine],
             [key, color, colorLine],
           ].forEach(function (q) {
             var _key = q[0]
@@ -452,7 +452,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                   idx * g.gridX - (idx == 0 ? lineWidth : 0),
                   g.innerHeight - (g.gridY * pos[0] + noteThickness) - lineWidth,
                   2 * g.gridX - (idx == 0 ? 0 : lineWidth) + noteLineWidth,
-                  noteThickness
+                  noteThickness,
                 )
                 g.endFill()
               })
@@ -494,14 +494,15 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 g.gridY * (lnEnd - lnBegin) +
                   (lnBegin == 0 ? lineWidth : 0) -
                   lineWidth -
-                  (lnEnd == g.logicalLength ? noteLineWidth : 0)
+                  (lnEnd == g.logicalLength ? noteLineWidth : 0),
               )
               g.endFill()
             }
           })
         }
-        ;[ //@ts-ignore: p[1] is a string
-          [(p[1].charAt(0) == "1" ? "D" : "E") + p[1].charAt(1), mineRed, mineRedLine],
+        ;[
+          //@ts-ignore: p[1] is a string
+          [(p[1].charAt(0) == '1' ? 'D' : 'E') + p[1].charAt(1), mineRed, mineRedLine],
           [p[1], color, colorLine],
         ].forEach(function (q) {
           var _key = q[0]
@@ -517,7 +518,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 idx * g.gridX - (idx == 0 ? lineWidth : 0),
                 g.innerHeight - (g.gridY * pos[0] + noteThickness) - lineWidth,
                 5 * g.gridX + noteLineWidth,
-                noteThickness
+                noteThickness,
               )
               g.endFill()
             })
@@ -599,14 +600,14 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 g.gridY * (lnEnd - lnBegin) +
                   (lnBegin == 0 ? lineWidth : 0) -
                   lineWidth -
-                  (lnEnd == g.logicalLength ? noteLineWidth : 0)
+                  (lnEnd == g.logicalLength ? noteLineWidth : 0),
               )
               g.endFill()
             }
           })
         }
         ;[
-          ["D" + key.charAt(1), mineRed, mineRed],
+          ['D' + key.charAt(1), mineRed, mineRed],
           [key, color, colorLine],
         ].forEach(function (q) {
           var _key = q[0]
@@ -622,7 +623,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 idx * g.gridX - (idx == 0 ? lineWidth : 0),
                 g.innerHeight - (g.gridY * pos[0] + noteThickness) - lineWidth,
                 2 * g.gridX - (idx == 0 ? 0 : lineWidth) + noteLineWidth,
-                noteThickness
+                noteThickness,
               )
               g.endFill()
             })
@@ -637,8 +638,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       colorLine = redLine
       lnColor = lnRed
       lnColorLine = lnRedLine
-      if ("16" in g.lnmap) {
-        g.lnmap["16"].forEach(function (area: any) {
+      if ('16' in g.lnmap) {
+        g.lnmap['16'].forEach(function (area: any) {
           if (area[0][0] <= g.index && area[1][0] >= g.index) {
             var lnBegin = 0
             var lnEnd = g.logicalLength
@@ -659,15 +660,15 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               g.gridY * (lnEnd - lnBegin) +
                 (lnBegin == 0 ? lineWidth : 0) -
                 lineWidth -
-                (lnEnd == g.logicalLength ? noteLineWidth : 0)
+                (lnEnd == g.logicalLength ? noteLineWidth : 0),
             )
             g.endFill()
           }
         })
       }
       ;[
-        ["D6", mineRed, mineRedLine],
-        ["16", color, colorLine],
+        ['D6', mineRed, mineRedLine],
+        ['16', color, colorLine],
       ].forEach(function (q) {
         var _key = q[0]
         var _color = q[1]
@@ -682,7 +683,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               idx * g.gridX - (idx == 0 ? lineWidth : 0),
               g.innerHeight - (g.gridY * pos[0] + noteThickness) - lineWidth,
               5 * g.gridX - (idx == 0 ? 0 : lineWidth) + noteLineWidth,
-              noteThickness
+              noteThickness,
             )
             g.endFill()
           })
@@ -731,13 +732,13 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 idx * g.gridX - (idx == 0 ? lineWidth : 0) + (i % 2 == 0 ? 0 : 1),
                 g.innerHeight - g.gridY * lnEnd - lineWidth,
                 2 * g.gridX - (idx == 0 ? 0 : lineWidth) - 2 * (i % 2 == 0 ? 0 : 1),
-                g.gridY * (lnEnd - lnBegin) + (lnBegin == 0 ? lineWidth : 0)
+                g.gridY * (lnEnd - lnBegin) + (lnBegin == 0 ? lineWidth : 0),
               )
             }
           })
         }
         ;[
-          [(key.charAt(0) == "1" ? "D" : "E") + key.charAt(1), mineRed],
+          [(key.charAt(0) == '1' ? 'D' : 'E') + key.charAt(1), mineRed],
           [key, schemes[i]],
         ].forEach(function (q) {
           var _key = q[0]
@@ -752,7 +753,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 g.innerHeight - (g.gridY * pos[0] + (barThickness + noteThickness) / 2) - lineWidth,
                 2 * g.gridX - (idx == 0 ? 0 : lineWidth) - 2 * (i % 2 == 0 ? 0 : 1),
                 noteThickness,
-                noteRadius
+                noteRadius,
               )
               g.endFill()
 
@@ -763,7 +764,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
                 idx * g.gridX - (idx == 0 ? lineWidth : 0) + (i % 2 == 0 ? 0 : 1),
                 g.innerHeight - (g.gridY * pos[0] + barThickness) - lineWidth,
                 2 * g.gridX - (idx == 0 ? 0 : lineWidth) - 2 * (i % 2 == 0 ? 0 : 1),
-                barThickness
+                barThickness,
               )
               g.endFill()
             })
@@ -780,7 +781,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var colorStroke = schemes[colorScheme].bpmTextStroke
       var lineH = schemes[colorScheme].bpmLineH
       // BPM, exBPM
-      var ch = ["03", "08"]
+      var ch = ['03', '08']
       ch.forEach(function (key) {
         if (g.score && key in g.score) {
           g.score[key].forEach(function (pos: any) {
@@ -792,15 +793,15 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               // for DP
               g.moveTo(
                 g.gridX * (measureGridSize[g.keys] - measureLeftLaneSize[g.keys]),
-                g.innerHeight - g.gridY * pos[0] - lineH!
+                g.innerHeight - g.gridY * pos[0] - lineH!,
               )
               g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
             }
             if (colorText != null) {
               var labelText = new PIXI.Text(Math.round(pos[1] * 10) / 10, {
-                fontFamily: "Arial",
+                fontFamily: 'Arial',
                 fontSize: g.gridX * 1.5,
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 fill: colorText,
                 stroke: colorStroke!,
                 strokeThickness: colorStroke != null ? 2 : 0,
@@ -823,7 +824,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var colorStroke = schemes[colorScheme].stopTextStroke
       var lineH = schemes[colorScheme].bpmLineH
       // STOP
-      var ch = ["09"]
+      var ch = ['09']
       ch.forEach(function (key) {
         if (g.score && key in g.score) {
           g.score[key].forEach(function (pos: any) {
@@ -835,16 +836,16 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
               // for DP
               g.moveTo(
                 g.gridX * (measureGridSize[g.keys] - measureLeftLaneSize[g.keys]),
-                g.innerHeight - g.gridY * pos[0] - lineH!
+                g.innerHeight - g.gridY * pos[0] - lineH!,
               )
               g.lineTo(g.gridX * measureGridSize[g.keys], g.innerHeight - g.gridY * pos[0] - lineH!)
             }
 
             if (colorText != null) {
-              var labelText = new PIXI.Text(/*Math.round(pos[1] * 10 / 48) / 10*/ "S", {
-                fontFamily: "Arial",
+              var labelText = new PIXI.Text(/*Math.round(pos[1] * 10 / 48) / 10*/ 'S', {
+                fontFamily: 'Arial',
                 fontSize: g.gridX * 1.75,
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 fill: colorText,
                 stroke: colorStroke!,
                 strokeThickness: colorStroke != null ? 2 : 0,
@@ -892,7 +893,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     container.heightShrinkRatio = thumbnailHeight / stage!.height
     var texture = renderer!.generateTexture(stage!, {
       scaleMode: PIXI.SCALE_MODES.NEAREST,
-      resolution: 2 * container.widthShrinkRatio
+      resolution: 2 * container.widthShrinkRatio,
     })
     container.thumbnail = new PIXI.Sprite(texture)
     container.thumbnail.width = renderer!.width /*- leftMargin - rightMargin*/
@@ -927,7 +928,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         grayMask.cursor = 'pointer'
         grayMask.eventMode = 'static'
         grayMask.hitArea = new PIXI.Rectangle(-renderer!.width, 0, 2 * renderer!.width, thumbnailHeight + 50) // +50: はみ出しクリ�?��可能領域
-        grayMask.on("mousedown", onClick).on("touchstart", onClick)
+        grayMask.on('mousedown', onClick).on('touchstart', onClick)
 
         container.viewBox.addChild(grayMask)
 
@@ -946,17 +947,17 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
           lineWidth,
           0,
           renderer!.width * container.widthShrinkRatio - lineWidth,
-          thumbnailHeight + 50
+          thumbnailHeight + 50,
         ) // +50: はみ出しクリ�?��可能領域
         frame
-          .on("mousedown", onDragStart)
-          .on("touchstart", onDragStart)
-          .on("mouseup", onDragEnd)
-          .on("mouseupoutside", onDragEnd)
-          .on("touchend", onDragEnd)
-          .on("touchendoutside", onDragEnd)
-          .on("globalmousemove", onDragMove)
-          .on("globaltouchmove", onDragMove)
+          .on('mousedown', onDragStart)
+          .on('touchstart', onDragStart)
+          .on('mouseup', onDragEnd)
+          .on('mouseupoutside', onDragEnd)
+          .on('touchend', onDragEnd)
+          .on('touchendoutside', onDragEnd)
+          .on('globalmousemove', onDragMove)
+          .on('globaltouchmove', onDragMove)
         container.viewBox.addChild(frame)
 
         container.addChild(container.viewBox)
@@ -983,13 +984,13 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       }
       renderer = PIXI.autoDetectRenderer({
         width: window.innerWidth,
-        height: window.innerHeight - headerHeight, 
+        height: window.innerHeight - headerHeight,
         backgroundColor: schemes[colorScheme].backgroundFill!,
         clearBeforeRender: true, // Before: schemes[colorScheme].backgroundFill != 0x000000
-        preserveDrawingBuffer: true
+        preserveDrawingBuffer: true,
       }) as PIXI.Renderer
 
-      document.getElementById("content")!.append(renderer.view as HTMLCanvasElement)
+      document.getElementById('content')!.append(renderer.view as HTMLCanvasElement)
     } else {
       // window resize
       if (renderer != null) {
@@ -1018,9 +1019,16 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
             lnmap: props.data.lnmap,
             scaleW: scaleW,
             scaleH: scaleH,
-            length: ((props.data.score[i] ? props.data.score[i].length : 72) || props.data.unit),
+            length: (props.data.score[i] ? props.data.score[i].length : 72) || props.data.unit,
             side: playSide,
-            keys: props.data.keys == 14 || props.data.keys == 10 || props.data.keys == 9 || props.data.keys == 7 || props.data.keys == 5 ? props.data.keys : 7,
+            keys:
+              props.data.keys == 14 ||
+              props.data.keys == 10 ||
+              props.data.keys == 9 ||
+              props.data.keys == 7 ||
+              props.data.keys == 5
+                ? props.data.keys
+                : 7,
             pattern: pattern,
             unit: props.data.unit,
             exratio: expLen > posYinit ? (posYinit - 2) / expLen : 1,
@@ -1048,14 +1056,14 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       stage.eventMode = 'static'
       stage.cursor = 'pointer'
       stage
-        .on("mousedown", onDragStart)
-        .on("touchstart", onDragStart)
-        .on("mouseup", onDragEnd)
-        .on("mouseupoutside", onDragEnd)
-        .on("touchend", onDragEnd)
-        .on("touchendoutside", onDragEnd)
-        .on("globalmousemove", onDragMove)
-        .on("globaltouchmove", onDragMove)
+        .on('mousedown', onDragStart)
+        .on('touchstart', onDragStart)
+        .on('mouseup', onDragEnd)
+        .on('mouseupoutside', onDragEnd)
+        .on('touchend', onDragEnd)
+        .on('touchendoutside', onDragEnd)
+        .on('globalmousemove', onDragMove)
+        .on('globaltouchmove', onDragMove)
     }
     stage.hitArea = new PIXI.Rectangle(0, 0, stage.width, stage.height)
     stage.position.x = 0
@@ -1129,7 +1137,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       }
       stage!.position.x = Math.min(
         Math.max(stage!.position.x + deltaX, renderer!.width - stage!.width - leftMargin - rightMargin),
-        0
+        0,
       )
       thumbnail!.drawViewBox()
       requestAnimationFrame(refresh)
@@ -1144,7 +1152,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
       var posX = curPosition.x - (renderer!.width * thumbnail.widthShrinkRatio) / 2
       stage!.position.x = Math.min(
         Math.max(-posX / thumbnail.widthShrinkRatio, renderer!.width - stage!.width - leftMargin - rightMargin),
-        0
+        0,
       )
       thumbnail!.drawViewBox()
       requestAnimationFrame(refresh)
@@ -1162,8 +1170,8 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
         return
       if (resizeTimeout !== -1) clearTimeout(resizeTimeout)
       resizeTimeout = window.setTimeout(render, 200)
-    });
-  });
+    })
+  })
 
   createEffect(() => {
     if (props.data !== undefined && props.data.score.length !== 0) {
@@ -1179,9 +1187,7 @@ const BmsCanvas: Component<{ data: any, params: any }> = (props) => {
     }
   })
 
-    return (
-        <div id="content" />
-    );
-};
+  return <div id="content" />
+}
 
-export default BmsCanvas;
+export default BmsCanvas
